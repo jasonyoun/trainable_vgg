@@ -1,0 +1,174 @@
+!_TAG_FILE_FORMAT	2	/extended format; --format=1 will not append ;" to lines/
+!_TAG_FILE_SORTED	1	/0=unsorted, 1=sorted, 2=foldcase/
+!_TAG_OUTPUT_MODE	u-ctags	/u-ctags or e-ctags/
+!_TAG_PROGRAM_AUTHOR	Universal Ctags Team	//
+!_TAG_PROGRAM_NAME	Universal Ctags	/Derived from Exuberant Ctags/
+!_TAG_PROGRAM_URL	https://ctags.io/	/official site/
+!_TAG_PROGRAM_VERSION	0.0.0	/1c8b98dd/
+DATA_TYPE_COMPCARS	main.py	/^DATA_TYPE_COMPCARS = 'compcars'$/;"	v
+DATA_TYPE_CUB	main.py	/^DATA_TYPE_CUB = 'cub'$/;"	v
+DATA_TYPE_IMAGENET	main.py	/^DATA_TYPE_IMAGENET = 'imagenet'$/;"	v
+DEFAULT_CODE_DIR	main.py	/^DEFAULT_CODE_DIR = 'D:\\\\Jason_Folder\\\\Yonsei\\\\Research\\\\fine_grained\\\\code'$/;"	v
+DEFAULT_DATASET_DIR	main.py	/^DEFAULT_DATASET_DIR = 'D:\\\\Jason_Folder\\\\Yonsei\\\\Research\\\\dataset'$/;"	v
+FLAGS	main.py	/^	FLAGS = parse_argument()$/;"	v
+FLAGS	main.py	/^FLAGS = None # parser namespace$/;"	v
+LOG_DIR	main.py	/^LOG_DIR = os.path.join(DEFAULT_CODE_DIR, LOG_FOLDER)$/;"	v
+LOG_FOLDER	main.py	/^LOG_FOLDER = 'log'$/;"	v
+NETWORKS_DIR	main.py	/^NETWORKS_DIR = os.path.join(DEFAULT_CODE_DIR, NETWORKS_FOLDER)$/;"	v
+NETWORKS_FOLDER	main.py	/^NETWORKS_FOLDER = 'networks'$/;"	v
+ParseCub	parsedata\\parse_cub.py	/^class ParseCub:$/;"	c
+ParseDogCat	parsedata\\parse_dogcat.py	/^class ParseDogCat:$/;"	c
+ParseImageNet	parsedata\\parse_imagenet.py	/^class ParseImageNet:$/;"	c
+ParsePedestrian	parsedata\\parse_pedestrian.py	/^class ParsePedestrian:$/;"	c
+Solver	solver.py	/^class Solver():$/;"	c
+VGG16	networks\\vgg16_trainable.py	/^class VGG16:$/;"	c
+VGG19	networks\\vgg19_trainable.py	/^class VGG19:$/;"	c
+VggCommon	networks\\vgg_common.py	/^class VggCommon:$/;"	c
+WEIGHTS_DIR	main.py	/^WEIGHTS_DIR = os.path.join(NETWORKS_DIR, WEIGHTS_FOLDER)$/;"	v
+WEIGHTS_FOLDER	main.py	/^WEIGHTS_FOLDER = 'weights'$/;"	v
+WEIGHT_VGG16_IMAGENET	main.py	/^WEIGHT_VGG16_IMAGENET = 'vgg16.npy'$/;"	v
+WEIGHT_VGG19_IMAGENET	main.py	/^WEIGHT_VGG19_IMAGENET = 'vgg19.npy'$/;"	v
+_BATCH_SIZE	solver.py	/^	_BATCH_SIZE = 70$/;"	v	class:Solver
+_CAT_LABEL	parsedata\\parse_dogcat.py	/^	_CAT_LABEL = 0$/;"	v	class:ParseDogCat
+_CUB_FOLDER	parsedata\\parse_cub.py	/^	_CUB_FOLDER = 'CUB_200_2011'$/;"	v	class:ParseCub
+_CUB_MEAN	parsedata\\parse_cub.py	/^	_CUB_MEAN = [123.93325545, 127.45225929, 110.18862946]$/;"	v	class:ParseCub
+_DOGCAT_FOLDER	parsedata\\parse_dogcat.py	/^	_DOGCAT_FOLDER = 'kaggle_dogcat'$/;"	v	class:ParseDogCat
+_DOGCAT_MEAN	parsedata\\parse_dogcat.py	/^	_DOGCAT_MEAN = [124.27288165, 115.83684239, 106.07509781]$/;"	v	class:ParseDogCat
+_DOG_LABEL	parsedata\\parse_dogcat.py	/^	_DOG_LABEL = 1$/;"	v	class:ParseDogCat
+_IMAGENET_MEAN	parsedata\\parse_imagenet.py	/^	_IMAGENET_MEAN = [123.68, 116.779, 103.939]$/;"	v	class:ParseImageNet
+_IMAGES_FOLDER	parsedata\\parse_cub.py	/^	_IMAGES_FOLDER = 'images'$/;"	v	class:ParseCub
+_IMAGES_TXT	parsedata\\parse_cub.py	/^	_IMAGES_TXT = 'images.txt'$/;"	v	class:ParseCub
+_IMAGE_CLASS_LABELS_TXT	parsedata\\parse_cub.py	/^	_IMAGE_CLASS_LABELS_TXT = 'image_class_labels.txt'$/;"	v	class:ParseCub
+_IMAGE_SIZE	parsedata\\parse_imagenet.py	/^	_IMAGE_SIZE = [224, 224, 3]$/;"	v	class:ParseImageNet
+_LEARNING_RATE	solver.py	/^	_LEARNING_RATE = 0.001$/;"	v	class:Solver
+_NEG_FOLDER	parsedata\\parse_pedestrian.py	/^	_NEG_FOLDER = 'neg'$/;"	v	class:ParsePedestrian
+_NEG_LABEL	parsedata\\parse_pedestrian.py	/^	_NEG_LABEL = 0$/;"	v	class:ParsePedestrian
+_NUM_CLASSES	parsedata\\parse_cub.py	/^	_NUM_CLASSES = 200$/;"	v	class:ParseCub
+_NUM_CLASSES	parsedata\\parse_dogcat.py	/^	_NUM_CLASSES = 2$/;"	v	class:ParseDogCat
+_NUM_CLASSES	parsedata\\parse_imagenet.py	/^	_NUM_CLASSES = 1000$/;"	v	class:ParseImageNet
+_NUM_CLASSES	parsedata\\parse_pedestrian.py	/^	_NUM_CLASSES = 2$/;"	v	class:ParsePedestrian
+_NUM_NEG_TRAIN_DATA	parsedata\\parse_pedestrian.py	/^	_NUM_NEG_TRAIN_DATA = 5000$/;"	v	class:ParsePedestrian
+_NUM_POS_TRAIN_DATA	parsedata\\parse_pedestrian.py	/^	_NUM_POS_TRAIN_DATA = 1237$/;"	v	class:ParsePedestrian
+_NUM_TEST_IMGS	parsedata\\parse_cub.py	/^	_NUM_TEST_IMGS = _NUM_TOTAL_IMGS - _NUM_TRAIN_IMGS$/;"	v	class:ParseCub
+_NUM_TOTAL_IMGS	parsedata\\parse_cub.py	/^	_NUM_TOTAL_IMGS = 11788$/;"	v	class:ParseCub
+_NUM_TRAIN_IMGS	parsedata\\parse_cub.py	/^	_NUM_TRAIN_IMGS = 9000$/;"	v	class:ParseCub
+_PEDESTRIAN_FOLDER	parsedata\\parse_pedestrian.py	/^	_PEDESTRIAN_FOLDER = 'pedestrian_xing'$/;"	v	class:ParsePedestrian
+_PEDESTRIAN_MEAN	parsedata\\parse_pedestrian.py	/^	_PEDESTRIAN_MEAN = [124.27288165, 115.83684239, 106.07509781]$/;"	v	class:ParsePedestrian
+_POS_FOLDER	parsedata\\parse_pedestrian.py	/^	_POS_FOLDER = 'pos'$/;"	v	class:ParsePedestrian
+_POS_LABEL	parsedata\\parse_pedestrian.py	/^	_POS_LABEL = 1$/;"	v	class:ParsePedestrian
+_TEST_FOLDER	parsedata\\parse_dogcat.py	/^	_TEST_FOLDER = 'test'$/;"	v	class:ParseDogCat
+_TEST_FOLDER	parsedata\\parse_pedestrian.py	/^	_TEST_FOLDER = 'test'$/;"	v	class:ParsePedestrian
+_TEST_LIST	parsedata\\parse_cub.py	/^	_TEST_LIST = 'test_list.txt'$/;"	v	class:ParseCub
+_TEST_LOG_FOLDER	solver.py	/^	_TEST_LOG_FOLDER = 'test'$/;"	v	class:Solver
+_TOTAL_TRAIN_DATA	parsedata\\parse_dogcat.py	/^	_TOTAL_TRAIN_DATA = 25000$/;"	v	class:ParseDogCat
+_TOTAL_TRAIN_DATA	parsedata\\parse_pedestrian.py	/^	_TOTAL_TRAIN_DATA = 6237$/;"	v	class:ParsePedestrian
+_TRAIN_DATA_PER_CLASS	parsedata\\parse_dogcat.py	/^	_TRAIN_DATA_PER_CLASS = 12500$/;"	v	class:ParseDogCat
+_TRAIN_FOLDER	parsedata\\parse_dogcat.py	/^	_TRAIN_FOLDER = 'train'$/;"	v	class:ParseDogCat
+_TRAIN_FOLDER	parsedata\\parse_pedestrian.py	/^	_TRAIN_FOLDER = 'train'$/;"	v	class:ParsePedestrian
+_TRAIN_LIST	parsedata\\parse_cub.py	/^	_TRAIN_LIST = 'train_list.txt'$/;"	v	class:ParseCub
+_TRAIN_LIST	parsedata\\parse_dogcat.py	/^	_TRAIN_LIST = 'train_list.txt'$/;"	v	class:ParseDogCat
+_TRAIN_LIST	parsedata\\parse_pedestrian.py	/^	_TRAIN_LIST = 'train_list.txt'$/;"	v	class:ParsePedestrian
+_TRAIN_LOG_FOLDER	solver.py	/^	_TRAIN_LOG_FOLDER = 'train'$/;"	v	class:Solver
+__init__	networks\\vgg16_trainable.py	/^	def __init__(self, num_classes, mean_rgb, vgg16_npy_path=None, init_layers=None, trainable=True/;"	m	class:VGG16
+__init__	networks\\vgg19_trainable.py	/^	def __init__(self, num_classes, mean_rgb, vgg19_npy_path=None, init_layers=None, trainable=True/;"	m	class:VGG19
+__init__	networks\\vgg_common.py	/^	def __init__(self, init_layers, data_dict, mean_rgb, trainable):$/;"	m	class:VggCommon
+__init__	parsedata\\parse_cub.py	/^	def __init__(self, dataset_dir, resize, crop_shape, batch_size, isotropical=False, initial_load/;"	m	class:ParseCub
+__init__	parsedata\\parse_dogcat.py	/^	def __init__(self, dataset_dir, crop_shape, batch_size, resize=256, initial_load=False):$/;"	m	class:ParseDogCat
+__init__	parsedata\\parse_imagenet.py	/^	def __init__(self, batch_size):$/;"	m	class:ParseImageNet
+__init__	parsedata\\parse_pedestrian.py	/^	def __init__(self, dataset_dir, crop_shape, batch_size, resize=256, initial_load=False):$/;"	m	class:ParsePedestrian
+__init__	solver.py	/^	def __init__($/;"	m	class:Solver
+_batch_idx	parsedata\\parse_cub.py	/^	_batch_idx = None$/;"	v	class:ParseCub
+_batch_idx	parsedata\\parse_dogcat.py	/^	_batch_idx = None$/;"	v	class:ParseDogCat
+_batch_idx	parsedata\\parse_pedestrian.py	/^	_batch_idx = None$/;"	v	class:ParsePedestrian
+_file_list	parsedata\\parse_dogcat.py	/^	_file_list = None$/;"	v	class:ParseDogCat
+_file_list	parsedata\\parse_pedestrian.py	/^	_file_list = None$/;"	v	class:ParsePedestrian
+_label_list	parsedata\\parse_dogcat.py	/^	_label_list = None$/;"	v	class:ParseDogCat
+_label_list	parsedata\\parse_pedestrian.py	/^	_label_list = None$/;"	v	class:ParsePedestrian
+_load_list	parsedata\\parse_cub.py	/^	def _load_list(self):$/;"	m	class:ParseCub
+_load_list	parsedata\\parse_dogcat.py	/^	def _load_list(self):$/;"	m	class:ParseDogCat
+_load_list	parsedata\\parse_pedestrian.py	/^	def _load_list(self):$/;"	m	class:ParsePedestrian
+_make_list	parsedata\\parse_cub.py	/^	def _make_list(self):$/;"	m	class:ParseCub
+_make_list	parsedata\\parse_dogcat.py	/^	def _make_list(self):$/;"	m	class:ParseDogCat
+_make_list	parsedata\\parse_pedestrian.py	/^	def _make_list(self):$/;"	m	class:ParsePedestrian
+_test_file_list	parsedata\\parse_cub.py	/^	_test_file_list = None$/;"	v	class:ParseCub
+_test_label_list	parsedata\\parse_cub.py	/^	_test_label_list = None$/;"	v	class:ParseCub
+_train_file_list	parsedata\\parse_cub.py	/^	_train_file_list = None$/;"	v	class:ParseCub
+_train_label_list	parsedata\\parse_cub.py	/^	_train_label_list = None$/;"	v	class:ParseCub
+augment_image_batch	parsedata\\image_utils.py	/^def augment_image_batch($/;"	f
+avg_pool	networks\\vgg_common.py	/^	def avg_pool(self, value, name):$/;"	m	class:VggCommon
+build	networks\\vgg16_trainable.py	/^	def build(self, rgb, train_mode=None):$/;"	m	class:VGG16
+build	networks\\vgg19_trainable.py	/^	def build(self, rgb, train_mode=None):$/;"	m	class:VGG19
+conv_layer	networks\\vgg_common.py	/^	def conv_layer(self, value, in_channels, out_channels, name):$/;"	m	class:VggCommon
+dir_exists	utils.py	/^def dir_exists(dir_name):$/;"	f
+dropout_layer	networks\\vgg_common.py	/^	def dropout_layer(self, inputs, dropout_rate, train_mode, name):$/;"	m	class:VggCommon
+fc_layer	networks\\vgg_common.py	/^	def fc_layer(self, value, in_size, out_size, is_last, name):$/;"	m	class:VggCommon
+file_exists	utils.py	/^def file_exists(file_name):$/;"	f
+get_conv_var	networks\\vgg_common.py	/^	def get_conv_var(self, filter_size, in_channels, out_channels, name):$/;"	m	class:VggCommon
+get_fc_var	networks\\vgg_common.py	/^	def get_fc_var(self, in_size, out_size, name):$/;"	m	class:VggCommon
+get_image_mean	parsedata\\image_utils.py	/^def get_image_mean(list_file, resize=None, isotropical=False):$/;"	f
+get_image_size	parsedata\\parse_imagenet.py	/^	def get_image_size(self):$/;"	m	class:ParseImageNet
+get_mean	parsedata\\parse_cub.py	/^	def get_mean(self):$/;"	m	class:ParseCub
+get_mean	parsedata\\parse_dogcat.py	/^	def get_mean(self):$/;"	m	class:ParseDogCat
+get_mean	parsedata\\parse_imagenet.py	/^	def get_mean(self):$/;"	m	class:ParseImageNet
+get_mean	parsedata\\parse_pedestrian.py	/^	def get_mean(self):$/;"	m	class:ParsePedestrian
+get_next_test_batch	parsedata\\parse_cub.py	/^	def get_next_test_batch(self):$/;"	m	class:ParseCub
+get_next_train_batch	parsedata\\parse_cub.py	/^	def get_next_train_batch(self, augment=True, shuffle_after_each_epoch=True):$/;"	m	class:ParseCub
+get_next_train_batch	parsedata\\parse_dogcat.py	/^	def get_next_train_batch(self):$/;"	m	class:ParseDogCat
+get_next_train_batch	parsedata\\parse_imagenet.py	/^	def get_next_train_batch(self):$/;"	m	class:ParseImageNet
+get_next_train_batch	parsedata\\parse_pedestrian.py	/^	def get_next_train_batch(self):$/;"	m	class:ParsePedestrian
+get_num_classes	parsedata\\parse_cub.py	/^	def get_num_classes(self):$/;"	m	class:ParseCub
+get_num_classes	parsedata\\parse_dogcat.py	/^	def get_num_classes(self):$/;"	m	class:ParseDogCat
+get_num_classes	parsedata\\parse_imagenet.py	/^	def get_num_classes(self):$/;"	m	class:ParseImageNet
+get_num_classes	parsedata\\parse_pedestrian.py	/^	def get_num_classes(self):$/;"	m	class:ParsePedestrian
+get_var	networks\\vgg_common.py	/^	def get_var(self, initial_value, name, idx, var_name):$/;"	m	class:VggCommon
+get_var_count	networks\\vgg16_trainable.py	/^	def get_var_count(self):$/;"	m	class:VGG16
+get_var_count	networks\\vgg19_trainable.py	/^	def get_var_count(self):$/;"	m	class:VGG19
+get_var_count	networks\\vgg_common.py	/^	def get_var_count(self):$/;"	m	class:VggCommon
+iaa	parsedata\\image_utils.py	/^from imgaug import augmenters as iaa$/;"	x
+isotropical_resize	parsedata\\image_utils.py	/^def isotropical_resize(input_img, base, upscale):$/;"	f
+log	main.py	/^import logging as log$/;"	I
+log	networks\\vgg16_trainable.py	/^import logging as log$/;"	I
+log	networks\\vgg19_trainable.py	/^import logging as log$/;"	I
+log	networks\\vgg_common.py	/^import logging as log$/;"	I
+log	parsedata\\image_utils.py	/^import logging as log$/;"	I
+log	parsedata\\parse_cub.py	/^import logging as log$/;"	I
+log	parsedata\\parse_dogcat.py	/^import logging as log$/;"	I
+log	parsedata\\parse_imagenet.py	/^import logging as log$/;"	I
+log	parsedata\\parse_pedestrian.py	/^import logging as log$/;"	I
+log	solver.py	/^import logging as log$/;"	I
+log	utils.py	/^import logging as log$/;"	I
+max_pool	networks\\vgg_common.py	/^	def max_pool(self, value, name):$/;"	m	class:VggCommon
+np	main.py	/^import numpy as np$/;"	I
+np	networks\\vgg16_trainable.py	/^import numpy as np$/;"	I
+np	networks\\vgg19_trainable.py	/^import numpy as np$/;"	I
+np	networks\\vgg_common.py	/^import numpy as np$/;"	I
+np	parsedata\\image_utils.py	/^import numpy as np$/;"	I
+np	parsedata\\parse_cub.py	/^import numpy as np$/;"	I
+np	parsedata\\parse_dogcat.py	/^import numpy as np$/;"	I
+np	parsedata\\parse_imagenet.py	/^import numpy as np$/;"	I
+np	parsedata\\parse_pedestrian.py	/^import numpy as np$/;"	I
+np	solver.py	/^import numpy as np$/;"	I
+np	utils.py	/^import numpy as np$/;"	I
+parse_argument	main.py	/^def parse_argument():$/;"	f
+plt	main.py	/^import matplotlib.pyplot as plt$/;"	I
+predictor	solver.py	/^	def predictor(self, image):$/;"	m	class:Solver
+print_prob	utils.py	/^def print_prob(prob, file_path):$/;"	f
+random_crop	parsedata\\image_utils.py	/^def random_crop(input_img, crop_height, crop_width):$/;"	f
+rgb_2_bgr	networks\\vgg_common.py	/^	def rgb_2_bgr(self, rgb):$/;"	m	class:VggCommon
+save_npy	networks\\vgg16_trainable.py	/^	def save_npy(self, sess, npy_path):$/;"	m	class:VGG16
+save_npy	networks\\vgg19_trainable.py	/^	def save_npy(self, sess, npy_path):$/;"	m	class:VGG19
+save_npy	networks\\vgg_common.py	/^	def save_npy(self, sess, npy_path):$/;"	m	class:VggCommon
+set_logging	main.py	/^def set_logging():$/;"	f
+solver	main.py	/^		solver = Solver($/;"	v
+tester	solver.py	/^	def tester(self):$/;"	m	class:Solver
+tf	main.py	/^import tensorflow as tf$/;"	I
+tf	networks\\vgg16_trainable.py	/^import tensorflow as tf$/;"	I
+tf	networks\\vgg19_trainable.py	/^import tensorflow as tf$/;"	I
+tf	networks\\vgg_common.py	/^import tensorflow as tf$/;"	I
+tf	parsedata\\image_utils.py	/^import tensorflow as tf$/;"	I
+tf	parsedata\\parse_cub.py	/^import tensorflow as tf$/;"	I
+tf	parsedata\\parse_dogcat.py	/^import tensorflow as tf$/;"	I
+tf	parsedata\\parse_imagenet.py	/^import tensorflow as tf$/;"	I
+tf	parsedata\\parse_pedestrian.py	/^import tensorflow as tf$/;"	I
+tf	solver.py	/^import tensorflow as tf$/;"	I
+trainer	solver.py	/^	def trainer(self, epochs=100, updated_weights_path=None):$/;"	m	class:Solver
