@@ -1,5 +1,1 @@
-*.pyc
-/log/archive/
 __pycache__/
-/networks/weights/
-
