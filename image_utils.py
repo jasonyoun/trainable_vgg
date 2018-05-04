@@ -113,6 +113,26 @@ def random_crop(input_img, crop_height, crop_width):
 
 	return input_img.crop((ws, hs, ws+crop_width, hs+crop_height))
 
+def central_crop(input_img, crop_height, crop_width):
+	"""
+	Central crop the input_img to specified size.
+
+	Inputs:
+		- input_img: input image of PIL Image format
+		- crop_height: height of the desired crop size
+		- crop_width: width of the desired crop size
+
+	Returns:
+		- cropped output image of PIL Image format
+	"""
+	input_width, input_height = input_img.size
+
+	# width start and height start
+	ws = int((input_width - crop_width)/2)
+	hs = int((input_height - crop_height)/2)
+
+	return input_img.crop((ws, hs, ws+crop_width, hs+crop_height))
+
 def augment_image_batch(
 		input_batch,
 		flr=None,
@@ -159,3 +179,45 @@ def augment_image_batch(
 		aug = iaa.SomeOf((0,None), augment_list, random_order=True)
 
 	return aug.augment_images(input_batch)
+
+def rgb_2_centered_bgr(rgb, mean_rgb):
+	"""
+	Convert RGB image to mean subtracted BGR image.
+
+	Inputs:
+		- rgb: input image in RGB format in range [0, 255]
+		- mean_rgb: mean of the dataset in RGB format
+
+	Returns:
+		- centered_bgr: centered bgr image
+	"""
+	red, green, blue = tf.split(axis=3, num_or_size_splits=3, value=rgb)
+
+	centered_bgr = tf.concat(
+		axis=3,
+		values=[blue - mean_rgb[2],
+				green - mean_rgb[1],
+				red - mean_rgb[0],])
+
+	return centered_bgr
+
+def centered_bgr_2_rgb(centered_bgr, mean_rgb):
+	"""
+	Convert centered BGR image to original RGB image.
+
+	Inputs:
+		- centered_bgr: input image in centered BGR format
+		- mean_rgb: mean of the dataset in RGB format
+
+	Returns:
+		- rgb: rgb image
+	"""
+	blue, green, red = tf.split(axis=3, num_or_size_splits=3, value=centered_bgr)
+
+	rgb = tf.concat(
+		axis=3,
+		values=[red + mean_rgb[0],
+				green + mean_rgb[1],
+				blue + mean_rgb[2],])
+
+	return rgb

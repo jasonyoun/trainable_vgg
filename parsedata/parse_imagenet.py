@@ -7,7 +7,6 @@ import tensorflow as tf
 class ParseImageNet:
 	# global variables
 	_NUM_CLASSES = 1000
-	_IMAGENET_MEAN = [123.68, 116.779, 103.939]
 	_IMAGE_SIZE = [224, 224, 3]
 
 	def __init__(self, batch_size):
@@ -18,15 +17,6 @@ class ParseImageNet:
 			- batch_size: batch size
 		"""
 		self.batch_size = batch_size
-
-	def get_mean(self):
-		"""
-		Return the mean of training images.
-
-		Returns:
-			- list containing mean of training images
-		"""
-		return self._IMAGENET_MEAN
 
 	def get_num_classes(self):
 		"""

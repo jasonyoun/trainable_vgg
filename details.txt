@@ -1,0 +1,77 @@
+"""
+vgg16_cub_ft.npy
+
+accuracy: 0.7563561797142029
+
+vgg16
+
+resize=(256,256)
+crop_shape=(224,224)
+
+iso: True
+lr = 0.0001
+lr_fast = 0.001
+epochs=100
+l2_reg=5e-4
+
+if e is 60:
+	learning_rate_fast /= 2
+ 	learning_rate /= 2
+"""
+
+
+
+"""
+st_vgg16
+
+st_vgg16_cub_ft_localization.npy
+st_vgg16_cub_ft_classification.npy
+
+epoch180: 0.71806800365448 (best)
+
+resize=(256,256)
+crop_shape=(224,224)
+
+iso: True
+lr = 0.00001
+lr_fast = 0.0005
+epochs=200
+l2_reg=5e-4
+
+stn (init with vgg16_cub_ft.npy)
+localization
+'conv6': 1x1x128, relu, weight: truncated normal(0, 0.0001), zero bias
+'fc7': 128, relu, weight: truncated normal(0, 0.0001), zero bias
+'fc8': 2, identity, weight: truncated normal(0, 0.0001), zero bias
+0.5 scale fixed, only translation
+
+classification
+load everything just as is
+"""
+
+if mode is 'train':
+	solver = Solver(
+		sess=sess,
+		dataset_type='cub',
+		dataset_dir=DEFAULT_DATASET_DIR,
+		resize=(256, 256),
+		crop_shape=(224, 224),
+		network_type='st_vgg',
+		log_dir=LOG_DIR,
+		weights_path=[os.path.join(WEIGHTS_DIR, 'vgg16_cub_ft.npy'),
+					  os.path.join(WEIGHTS_DIR, 'vgg16_cub_ft.npy')],
+		init_layers=[])
+
+	lr_fast_vars=[
+		'localization/fc8/fc8_filters', 'localization/fc8/fc8_biases',
+		'classification/fc8/fc8_filters', 'classification/fc8/fc8_biases']
+
+	solver.trainer(
+		learning_rate=0.00001,
+		epochs=200,
+		learning_rate_fast=0.0005,
+		lr_fast_vars=lr_fast_vars,
+		l2_regularization_decay=5e-4,
+		save_path=os.path.join(WEIGHTS_DIR, 'st_vgg16_cub_ft.npy'),
+		save_scope=['localization', 'classification'],
+		save_epoch=[60, 80, 100, 120, 140, 160, 180, 199])

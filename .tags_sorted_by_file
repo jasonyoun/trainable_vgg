@@ -4,6 +4,16 @@
 !_TAG_PROGRAM_NAME	Universal Ctags	/Derived from Exuberant Ctags/
 !_TAG_PROGRAM_AUTHOR	Universal Ctags Team	//
 !_TAG_PROGRAM_URL	https://ctags.io/	/official site/
+augment_image_batch	image_utils.py	/^def augment_image_batch($/;"	f
+centered_bgr_2_rgb	image_utils.py	/^def centered_bgr_2_rgb(centered_bgr, mean_rgb):$/;"	f
+get_image_mean	image_utils.py	/^def get_image_mean(list_file, resize=None, isotropical=False):$/;"	f
+iaa	image_utils.py	/^from imgaug import augmenters as iaa$/;"	x
+isotropical_resize	image_utils.py	/^def isotropical_resize(input_img, base, upscale):$/;"	f
+log	image_utils.py	/^import logging as log$/;"	I
+np	image_utils.py	/^import numpy as np$/;"	I
+random_crop	image_utils.py	/^def random_crop(input_img, crop_height, crop_width):$/;"	f
+rgb_2_centered_bgr	image_utils.py	/^def rgb_2_centered_bgr(rgb, mean_rgb):$/;"	f
+tf	image_utils.py	/^import tensorflow as tf$/;"	I
 DATA_TYPE_COMPCARS	main.py	/^DATA_TYPE_COMPCARS = 'compcars'$/;"	v
 DATA_TYPE_CUB	main.py	/^DATA_TYPE_CUB = 'cub'$/;"	v
 DATA_TYPE_IMAGENET	main.py	/^DATA_TYPE_IMAGENET = 'imagenet'$/;"	v
@@ -25,47 +35,140 @@ parse_argument	main.py	/^def parse_argument():$/;"	f
 plt	main.py	/^import matplotlib.pyplot as plt$/;"	I
 set_logging	main.py	/^def set_logging():$/;"	f
 solver	main.py	/^		solver = Solver($/;"	v
+test_img	main.py	/^	test_img = Image.open('laska.png').convert('RGB').resize((224,224))$/;"	v
+test_img	main.py	/^	test_img = np.array(test_img, dtype=np.float32).reshape((1, 224, 224, 3))$/;"	v
 tf	main.py	/^import tensorflow as tf$/;"	I
-VGG16	networks\\vgg16_trainable.py	/^class VGG16:$/;"	c
-__init__	networks\\vgg16_trainable.py	/^	def __init__(self, num_classes, mean_rgb, vgg16_npy_path=None, init_layers=None, trainable=True/;"	m	class:VGG16
-build	networks\\vgg16_trainable.py	/^	def build(self, rgb, train_mode=None):$/;"	m	class:VGG16
-get_var_count	networks\\vgg16_trainable.py	/^	def get_var_count(self):$/;"	m	class:VGG16
-log	networks\\vgg16_trainable.py	/^import logging as log$/;"	I
-np	networks\\vgg16_trainable.py	/^import numpy as np$/;"	I
-save_npy	networks\\vgg16_trainable.py	/^	def save_npy(self, sess, npy_path):$/;"	m	class:VGG16
-tf	networks\\vgg16_trainable.py	/^import tensorflow as tf$/;"	I
-VGG19	networks\\vgg19_trainable.py	/^class VGG19:$/;"	c
-__init__	networks\\vgg19_trainable.py	/^	def __init__(self, num_classes, mean_rgb, vgg19_npy_path=None, init_layers=None, trainable=True/;"	m	class:VGG19
-build	networks\\vgg19_trainable.py	/^	def build(self, rgb, train_mode=None):$/;"	m	class:VGG19
-get_var_count	networks\\vgg19_trainable.py	/^	def get_var_count(self):$/;"	m	class:VGG19
-log	networks\\vgg19_trainable.py	/^import logging as log$/;"	I
-np	networks\\vgg19_trainable.py	/^import numpy as np$/;"	I
-save_npy	networks\\vgg19_trainable.py	/^	def save_npy(self, sess, npy_path):$/;"	m	class:VGG19
-tf	networks\\vgg19_trainable.py	/^import tensorflow as tf$/;"	I
-VggCommon	networks\\vgg_common.py	/^class VggCommon:$/;"	c
-__init__	networks\\vgg_common.py	/^	def __init__(self, init_layers, data_dict, mean_rgb, trainable):$/;"	m	class:VggCommon
-avg_pool	networks\\vgg_common.py	/^	def avg_pool(self, value, name):$/;"	m	class:VggCommon
-conv_layer	networks\\vgg_common.py	/^	def conv_layer(self, value, in_channels, out_channels, name):$/;"	m	class:VggCommon
-dropout_layer	networks\\vgg_common.py	/^	def dropout_layer(self, inputs, dropout_rate, train_mode, name):$/;"	m	class:VggCommon
-fc_layer	networks\\vgg_common.py	/^	def fc_layer(self, value, in_size, out_size, is_last, name):$/;"	m	class:VggCommon
-get_conv_var	networks\\vgg_common.py	/^	def get_conv_var(self, filter_size, in_channels, out_channels, name):$/;"	m	class:VggCommon
-get_fc_var	networks\\vgg_common.py	/^	def get_fc_var(self, in_size, out_size, name):$/;"	m	class:VggCommon
-get_var	networks\\vgg_common.py	/^	def get_var(self, initial_value, name, idx, var_name):$/;"	m	class:VggCommon
-get_var_count	networks\\vgg_common.py	/^	def get_var_count(self):$/;"	m	class:VggCommon
-log	networks\\vgg_common.py	/^import logging as log$/;"	I
-max_pool	networks\\vgg_common.py	/^	def max_pool(self, value, name):$/;"	m	class:VggCommon
-np	networks\\vgg_common.py	/^import numpy as np$/;"	I
-rgb_2_bgr	networks\\vgg_common.py	/^	def rgb_2_bgr(self, rgb):$/;"	m	class:VggCommon
-save_npy	networks\\vgg_common.py	/^	def save_npy(self, sess, npy_path):$/;"	m	class:VggCommon
-tf	networks\\vgg_common.py	/^import tensorflow as tf$/;"	I
-augment_image_batch	parsedata\\image_utils.py	/^def augment_image_batch($/;"	f
-get_image_mean	parsedata\\image_utils.py	/^def get_image_mean(list_file, resize=None, isotropical=False):$/;"	f
-iaa	parsedata\\image_utils.py	/^from imgaug import augmenters as iaa$/;"	x
-isotropical_resize	parsedata\\image_utils.py	/^def isotropical_resize(input_img, base, upscale):$/;"	f
-log	parsedata\\image_utils.py	/^import logging as log$/;"	I
-np	parsedata\\image_utils.py	/^import numpy as np$/;"	I
-random_crop	parsedata\\image_utils.py	/^def random_crop(input_img, crop_height, crop_width):$/;"	f
-tf	parsedata\\image_utils.py	/^import tensorflow as tf$/;"	I
+NetworkCommon	networks\\network_common.py	/^class NetworkCommon:$/;"	c
+__init__	networks\\network_common.py	/^	def __init__(self, init_layers, data_dict, trainable):$/;"	m	class:NetworkCommon
+_get_conv_var	networks\\network_common.py	/^	def _get_conv_var(self, filter_size, in_channels, out_channels, name):$/;"	m	class:NetworkCommon
+_get_fc_var	networks\\network_common.py	/^	def _get_fc_var(self, in_size, out_size, init_weight, init_bias, name):$/;"	m	class:NetworkCommon
+_get_var	networks\\network_common.py	/^	def _get_var(self, initial_value, name, idx, var_name):$/;"	m	class:NetworkCommon
+avg_pool	networks\\network_common.py	/^	def avg_pool(self, inputs, name):$/;"	m	class:NetworkCommon
+conv_layer	networks\\network_common.py	/^	def conv_layer(self, inputs, filter_size, in_channels, out_channels, name):$/;"	m	class:NetworkCommon
+dropout_layer	networks\\network_common.py	/^	def dropout_layer(self, inputs, dropout_rate, train_mode, name):$/;"	m	class:NetworkCommon
+fc_layer	networks\\network_common.py	/^	def fc_layer(self, inputs, in_size, out_size, is_last, name, **kwargs):$/;"	m	class:NetworkCommon
+log	networks\\network_common.py	/^import logging as log$/;"	I
+max_pool	networks\\network_common.py	/^	def max_pool(self, inputs, name):$/;"	m	class:NetworkCommon
+np	networks\\network_common.py	/^import numpy as np$/;"	I
+tf	networks\\network_common.py	/^import tensorflow as tf$/;"	I
+ST_VGG	networks\\st_vgg.py	/^class ST_VGG:$/;"	c
+__init__	networks\\st_vgg.py	/^	def __init__(self, mean_rgb, num_classes=None, loc_vgg_npy_path=None, cls_vgg_npy_path=None,$/;"	m	class:ST_VGG
+build	networks\\st_vgg.py	/^	def build(self, rgb, train_mode=None):$/;"	m	class:ST_VGG
+log	networks\\st_vgg.py	/^import logging as log$/;"	I
+np	networks\\st_vgg.py	/^import numpy as np$/;"	I
+tf	networks\\st_vgg.py	/^import tensorflow as tf$/;"	I
+W_conv1	networks\\stn\\cluttered_mnist.py	/^W_conv1 = weight_variable([filter_size, filter_size, 1, n_filters_1])$/;"	v
+W_conv2	networks\\stn\\cluttered_mnist.py	/^W_conv2 = weight_variable([filter_size, filter_size, n_filters_1, n_filters_2])$/;"	v
+W_fc1	networks\\stn\\cluttered_mnist.py	/^W_fc1 = weight_variable([10 * 10 * n_filters_2, n_fc])$/;"	v
+W_fc2	networks\\stn\\cluttered_mnist.py	/^W_fc2 = weight_variable([n_fc, 10])$/;"	v
+W_fc_loc1	networks\\stn\\cluttered_mnist.py	/^W_fc_loc1 = weight_variable([1600, 20])$/;"	v
+W_fc_loc2	networks\\stn\\cluttered_mnist.py	/^W_fc_loc2 = weight_variable([20, 6])$/;"	v
+X_test	networks\\stn\\cluttered_mnist.py	/^X_test = mnist_cluttered['X_test']$/;"	v
+X_train	networks\\stn\\cluttered_mnist.py	/^X_train = mnist_cluttered['X_train']$/;"	v
+X_valid	networks\\stn\\cluttered_mnist.py	/^X_valid = mnist_cluttered['X_valid']$/;"	v
+Y_test	networks\\stn\\cluttered_mnist.py	/^Y_test = dense_to_one_hot(y_test, n_classes=10)$/;"	v
+Y_train	networks\\stn\\cluttered_mnist.py	/^Y_train = dense_to_one_hot(y_train, n_classes=10)$/;"	v
+Y_valid	networks\\stn\\cluttered_mnist.py	/^Y_valid = dense_to_one_hot(y_valid, n_classes=10)$/;"	v
+accuracy	networks\\stn\\cluttered_mnist.py	/^accuracy = tf.reduce_mean(tf.cast(correct_prediction, 'float'))$/;"	v
+b_conv1	networks\\stn\\cluttered_mnist.py	/^b_conv1 = bias_variable([n_filters_1])$/;"	v
+b_conv2	networks\\stn\\cluttered_mnist.py	/^b_conv2 = bias_variable([n_filters_2])$/;"	v
+b_fc1	networks\\stn\\cluttered_mnist.py	/^b_fc1 = bias_variable([n_fc])$/;"	v
+b_fc2	networks\\stn\\cluttered_mnist.py	/^b_fc2 = bias_variable([10])$/;"	v
+b_fc_loc1	networks\\stn\\cluttered_mnist.py	/^b_fc_loc1 = bias_variable([20])$/;"	v
+b_fc_loc2	networks\\stn\\cluttered_mnist.py	/^b_fc_loc2 = tf.Variable(initial_value=initial, name='b_fc_loc2')$/;"	v
+batch_xs	networks\\stn\\cluttered_mnist.py	/^		batch_xs = X_train[indices[iter_i]:indices[iter_i+1]]$/;"	v
+batch_ys	networks\\stn\\cluttered_mnist.py	/^		batch_ys = Y_train[indices[iter_i]:indices[iter_i+1]]$/;"	v
+correct_prediction	networks\\stn\\cluttered_mnist.py	/^correct_prediction = tf.equal(tf.argmax(y_logits, 1), tf.argmax(y, 1))$/;"	v
+cross_entropy	networks\\stn\\cluttered_mnist.py	/^cross_entropy = tf.reduce_mean($/;"	v
+filter_size	networks\\stn\\cluttered_mnist.py	/^filter_size = 3$/;"	v
+grads	networks\\stn\\cluttered_mnist.py	/^grads = opt.compute_gradients(cross_entropy, [b_fc_loc2])$/;"	v
+h_conv1	networks\\stn\\cluttered_mnist.py	/^h_conv1 = tf.nn.relu($/;"	v
+h_conv2	networks\\stn\\cluttered_mnist.py	/^h_conv2 = tf.nn.relu($/;"	v
+h_conv2_flat	networks\\stn\\cluttered_mnist.py	/^h_conv2_flat = tf.reshape(h_conv2, [-1, 10 * 10 * n_filters_2])$/;"	v
+h_fc1	networks\\stn\\cluttered_mnist.py	/^h_fc1 = tf.nn.relu(tf.matmul(h_conv2_flat, W_fc1) + b_fc1)$/;"	v
+h_fc1_drop	networks\\stn\\cluttered_mnist.py	/^h_fc1_drop = tf.nn.dropout(h_fc1, keep_prob)$/;"	v
+h_fc_loc1	networks\\stn\\cluttered_mnist.py	/^h_fc_loc1 = tf.nn.tanh(tf.matmul(x, W_fc_loc1) + b_fc_loc1)$/;"	v
+h_fc_loc1_drop	networks\\stn\\cluttered_mnist.py	/^h_fc_loc1_drop = tf.nn.dropout(h_fc_loc1, keep_prob)$/;"	v
+h_fc_loc2	networks\\stn\\cluttered_mnist.py	/^h_fc_loc2 = tf.nn.tanh(tf.matmul(h_fc_loc1_drop, W_fc_loc2) + b_fc_loc2)$/;"	v
+h_trans	networks\\stn\\cluttered_mnist.py	/^h_trans = transformer(x_tensor, h_fc_loc2, out_size)$/;"	v
+indices	networks\\stn\\cluttered_mnist.py	/^indices = indices.astype('int')$/;"	v
+indices	networks\\stn\\cluttered_mnist.py	/^indices = np.linspace(0, 10000 - 1, iter_per_epoch)$/;"	v
+initial	networks\\stn\\cluttered_mnist.py	/^initial = initial.astype('float32')$/;"	v
+initial	networks\\stn\\cluttered_mnist.py	/^initial = initial.flatten()$/;"	v
+initial	networks\\stn\\cluttered_mnist.py	/^initial = np.array([[1., 0, 0], [0, 1., 0]])$/;"	v
+iter_per_epoch	networks\\stn\\cluttered_mnist.py	/^iter_per_epoch = 100$/;"	v
+keep_prob	networks\\stn\\cluttered_mnist.py	/^keep_prob = tf.placeholder(tf.float32)$/;"	v
+loss	networks\\stn\\cluttered_mnist.py	/^			loss = sess.run(cross_entropy,$/;"	v
+mnist_cluttered	networks\\stn\\cluttered_mnist.py	/^mnist_cluttered = np.load('.\/data\/mnist_sequence1_sample_5distortions5x5.npz')$/;"	v
+n_epochs	networks\\stn\\cluttered_mnist.py	/^n_epochs = 500$/;"	v
+n_fc	networks\\stn\\cluttered_mnist.py	/^n_fc = 1024$/;"	v
+n_filters_1	networks\\stn\\cluttered_mnist.py	/^n_filters_1 = 16$/;"	v
+n_filters_2	networks\\stn\\cluttered_mnist.py	/^n_filters_2 = 16$/;"	v
+np	networks\\stn\\cluttered_mnist.py	/^import numpy as np$/;"	I
+opt	networks\\stn\\cluttered_mnist.py	/^opt = tf.train.AdamOptimizer()$/;"	v
+optimizer	networks\\stn\\cluttered_mnist.py	/^optimizer = opt.minimize(cross_entropy)$/;"	v
+out_size	networks\\stn\\cluttered_mnist.py	/^out_size = (40, 40)$/;"	v
+sess	networks\\stn\\cluttered_mnist.py	/^sess = tf.Session()$/;"	v
+tf	networks\\stn\\cluttered_mnist.py	/^import tensorflow as tf$/;"	I
+train_size	networks\\stn\\cluttered_mnist.py	/^train_size = 10000$/;"	v
+x	networks\\stn\\cluttered_mnist.py	/^x = tf.placeholder(tf.float32, [None, 1600])$/;"	v
+x_tensor	networks\\stn\\cluttered_mnist.py	/^x_tensor = tf.reshape(x, [-1, 40, 40, 1])$/;"	v
+y	networks\\stn\\cluttered_mnist.py	/^y = tf.placeholder(tf.float32, [None, 10])$/;"	v
+y_logits	networks\\stn\\cluttered_mnist.py	/^y_logits = tf.matmul(h_fc1_drop, W_fc2) + b_fc2$/;"	v
+y_test	networks\\stn\\cluttered_mnist.py	/^y_test = mnist_cluttered['y_test']$/;"	v
+y_train	networks\\stn\\cluttered_mnist.py	/^y_train = mnist_cluttered['y_train']$/;"	v
+y_valid	networks\\stn\\cluttered_mnist.py	/^y_valid = mnist_cluttered['y_valid']$/;"	v
+W_fc1	networks\\stn\\example.py	/^    W_fc1 = tf.Variable(tf.zeros([1200 * 1600 * 3, n_fc]), name='W_fc1')$/;"	v
+b_fc1	networks\\stn\\example.py	/^    b_fc1 = tf.Variable(initial_value=initial, name='b_fc1')$/;"	v
+batch	networks\\stn\\example.py	/^batch = np.append(batch, im, axis=0)$/;"	v
+batch	networks\\stn\\example.py	/^batch = np.append(im, im, axis=0)$/;"	v
+h_fc1	networks\\stn\\example.py	/^    h_fc1 = tf.matmul(tf.zeros([num_batch, 1200 * 1600 * 3]), W_fc1) + b_fc1$/;"	v
+h_trans	networks\\stn\\example.py	/^    h_trans = transformer(x, h_fc1, out_size)$/;"	v
+im	networks\\stn\\example.py	/^im = im \/ 255.$/;"	v
+im	networks\\stn\\example.py	/^im = im.astype('float32')$/;"	v
+im	networks\\stn\\example.py	/^im = im.reshape(1, 1200, 1600, 3)$/;"	v
+im	networks\\stn\\example.py	/^im = ndimage.imread('cat.jpg')$/;"	v
+initial	networks\\stn\\example.py	/^    initial = initial.astype('float32')$/;"	v
+initial	networks\\stn\\example.py	/^    initial = initial.flatten()$/;"	v
+initial	networks\\stn\\example.py	/^    initial = np.array([[0.5, 0, 0], [0, 0.5, 0]])$/;"	v
+n_fc	networks\\stn\\example.py	/^    n_fc = 6$/;"	v
+np	networks\\stn\\example.py	/^import numpy as np$/;"	I
+num_batch	networks\\stn\\example.py	/^num_batch = 3$/;"	v
+out_size	networks\\stn\\example.py	/^out_size = (600, 800)$/;"	v
+plt	networks\\stn\\example.py	/^import matplotlib.pyplot as plt$/;"	I
+sess	networks\\stn\\example.py	/^sess = tf.Session()$/;"	v
+tf	networks\\stn\\example.py	/^import tensorflow as tf$/;"	I
+x	networks\\stn\\example.py	/^x = tf.cast(batch, 'float32')$/;"	v
+x	networks\\stn\\example.py	/^x = tf.placeholder(tf.float32, [None, 1200, 1600, 3])$/;"	v
+y	networks\\stn\\example.py	/^y = sess.run(h_trans, feed_dict={x: batch})$/;"	v
+_interpolate	networks\\stn\\spatial_transformer.py	/^	def _interpolate(im, x, y, out_size):$/;"	f	function:transformer	file:
+_meshgrid	networks\\stn\\spatial_transformer.py	/^	def _meshgrid(height, width):$/;"	f	function:transformer	file:
+_repeat	networks\\stn\\spatial_transformer.py	/^	def _repeat(x, n_repeats):$/;"	f	function:transformer	file:
+_transform	networks\\stn\\spatial_transformer.py	/^	def _transform(theta, input_dim, out_size):$/;"	f	function:transformer	file:
+batch_transformer	networks\\stn\\spatial_transformer.py	/^def batch_transformer(U, thetas, out_size, name='BatchSpatialTransformer'):$/;"	f
+tf	networks\\stn\\spatial_transformer.py	/^import tensorflow as tf$/;"	I
+transformer	networks\\stn\\spatial_transformer.py	/^def transformer(U, theta, out_size, name='SpatialTransformer', **kwargs):$/;"	f
+bias_variable	networks\\stn\\tf_utils.py	/^def bias_variable(shape):$/;"	f
+conv2d	networks\\stn\\tf_utils.py	/^def conv2d(x, n_filters,$/;"	f
+dense_to_one_hot	networks\\stn\\tf_utils.py	/^def dense_to_one_hot(labels, n_classes=2):$/;"	f
+linear	networks\\stn\\tf_utils.py	/^def linear(x, n_units, scope=None, stddev=0.02,$/;"	f
+np	networks\\stn\\tf_utils.py	/^import numpy as np$/;"	I
+tf	networks\\stn\\tf_utils.py	/^import tensorflow as tf$/;"	I
+weight_variable	networks\\stn\\tf_utils.py	/^def weight_variable(shape):$/;"	f
+VGG16	networks\\vgg16.py	/^class VGG16:$/;"	c
+__init__	networks\\vgg16.py	/^	def __init__(self, mean_rgb, num_classes=None, vgg16_npy_path=None,$/;"	m	class:VGG16
+build	networks\\vgg16.py	/^	def build(self, rgb, train_mode=None):$/;"	m	class:VGG16
+build_partial	networks\\vgg16.py	/^	def build_partial(self, rgb, build_until, train_mode=None):$/;"	m	class:VGG16
+log	networks\\vgg16.py	/^import logging as log$/;"	I
+np	networks\\vgg16.py	/^import numpy as np$/;"	I
+tf	networks\\vgg16.py	/^import tensorflow as tf$/;"	I
+VGG19	networks\\vgg19.py	/^class VGG19:$/;"	c
+__init__	networks\\vgg19.py	/^	def __init__(self, mean_rgb, num_classes=None, vgg19_npy_path=None, init_layers=None, trainable/;"	m	class:VGG19
+build	networks\\vgg19.py	/^	def build(self, rgb, train_mode=None):$/;"	m	class:VGG19
+build_partial	networks\\vgg19.py	/^	def build_partial(self, rgb, build_until, train_mode=None):$/;"	m	class:VGG19
+log	networks\\vgg19.py	/^import logging as log$/;"	I
+np	networks\\vgg19.py	/^import numpy as np$/;"	I
+tf	networks\\vgg19.py	/^import tensorflow as tf$/;"	I
 ParseCub	parsedata\\parse_cub.py	/^class ParseCub:$/;"	c
 _CUB_FOLDER	parsedata\\parse_cub.py	/^	_CUB_FOLDER = 'CUB_200_2011'$/;"	v	class:ParseCub
 _CUB_MEAN	parsedata\\parse_cub.py	/^	_CUB_MEAN = [123.93325545, 127.45225929, 110.18862946]$/;"	v	class:ParseCub
@@ -132,34 +235,43 @@ ParsePedestrian	parsedata\\parse_pedestrian.py	/^class ParsePedestrian:$/;"	c
 _NEG_FOLDER	parsedata\\parse_pedestrian.py	/^	_NEG_FOLDER = 'neg'$/;"	v	class:ParsePedestrian
 _NEG_LABEL	parsedata\\parse_pedestrian.py	/^	_NEG_LABEL = 0$/;"	v	class:ParsePedestrian
 _NUM_CLASSES	parsedata\\parse_pedestrian.py	/^	_NUM_CLASSES = 2$/;"	v	class:ParsePedestrian
+_NUM_NEG_TEST_DATA	parsedata\\parse_pedestrian.py	/^	_NUM_NEG_TEST_DATA = 4504$/;"	v	class:ParsePedestrian
 _NUM_NEG_TRAIN_DATA	parsedata\\parse_pedestrian.py	/^	_NUM_NEG_TRAIN_DATA = 5000$/;"	v	class:ParsePedestrian
+_NUM_POS_TEST_DATA	parsedata\\parse_pedestrian.py	/^	_NUM_POS_TEST_DATA = 1178$/;"	v	class:ParsePedestrian
 _NUM_POS_TRAIN_DATA	parsedata\\parse_pedestrian.py	/^	_NUM_POS_TRAIN_DATA = 1237$/;"	v	class:ParsePedestrian
 _PEDESTRIAN_FOLDER	parsedata\\parse_pedestrian.py	/^	_PEDESTRIAN_FOLDER = 'pedestrian_xing'$/;"	v	class:ParsePedestrian
-_PEDESTRIAN_MEAN	parsedata\\parse_pedestrian.py	/^	_PEDESTRIAN_MEAN = [124.27288165, 115.83684239, 106.07509781]$/;"	v	class:ParsePedestrian
+_PEDESTRIAN_MEAN	parsedata\\parse_pedestrian.py	/^	_PEDESTRIAN_MEAN = [114.86996197, 114.63007618, 108.72589651]$/;"	v	class:ParsePedestrian
 _POS_FOLDER	parsedata\\parse_pedestrian.py	/^	_POS_FOLDER = 'pos'$/;"	v	class:ParsePedestrian
 _POS_LABEL	parsedata\\parse_pedestrian.py	/^	_POS_LABEL = 1$/;"	v	class:ParsePedestrian
 _TEST_FOLDER	parsedata\\parse_pedestrian.py	/^	_TEST_FOLDER = 'test'$/;"	v	class:ParsePedestrian
+_TEST_LIST	parsedata\\parse_pedestrian.py	/^	_TEST_LIST = 'test_list.txt'$/;"	v	class:ParsePedestrian
+_TOTAL_TEST_DATA	parsedata\\parse_pedestrian.py	/^	_TOTAL_TEST_DATA = 5682$/;"	v	class:ParsePedestrian
 _TOTAL_TRAIN_DATA	parsedata\\parse_pedestrian.py	/^	_TOTAL_TRAIN_DATA = 6237$/;"	v	class:ParsePedestrian
 _TRAIN_FOLDER	parsedata\\parse_pedestrian.py	/^	_TRAIN_FOLDER = 'train'$/;"	v	class:ParsePedestrian
 _TRAIN_LIST	parsedata\\parse_pedestrian.py	/^	_TRAIN_LIST = 'train_list.txt'$/;"	v	class:ParsePedestrian
-__init__	parsedata\\parse_pedestrian.py	/^	def __init__(self, dataset_dir, crop_shape, batch_size, resize=256, initial_load=False):$/;"	m	class:ParsePedestrian
+__init__	parsedata\\parse_pedestrian.py	/^	def __init__(self, dataset_dir, resize, crop_shape, batch_size, isotropical=False, initial_load/;"	m	class:ParsePedestrian
 _batch_idx	parsedata\\parse_pedestrian.py	/^	_batch_idx = None$/;"	v	class:ParsePedestrian
-_file_list	parsedata\\parse_pedestrian.py	/^	_file_list = None$/;"	v	class:ParsePedestrian
-_label_list	parsedata\\parse_pedestrian.py	/^	_label_list = None$/;"	v	class:ParsePedestrian
 _load_list	parsedata\\parse_pedestrian.py	/^	def _load_list(self):$/;"	m	class:ParsePedestrian
 _make_list	parsedata\\parse_pedestrian.py	/^	def _make_list(self):$/;"	m	class:ParsePedestrian
+_test_file_list	parsedata\\parse_pedestrian.py	/^	_test_file_list = None$/;"	v	class:ParsePedestrian
+_test_label_list	parsedata\\parse_pedestrian.py	/^	_test_label_list = None$/;"	v	class:ParsePedestrian
+_train_file_list	parsedata\\parse_pedestrian.py	/^	_train_file_list = None$/;"	v	class:ParsePedestrian
+_train_label_list	parsedata\\parse_pedestrian.py	/^	_train_label_list = None$/;"	v	class:ParsePedestrian
 get_mean	parsedata\\parse_pedestrian.py	/^	def get_mean(self):$/;"	m	class:ParsePedestrian
-get_next_train_batch	parsedata\\parse_pedestrian.py	/^	def get_next_train_batch(self):$/;"	m	class:ParsePedestrian
+get_next_test_batch	parsedata\\parse_pedestrian.py	/^	def get_next_test_batch(self):$/;"	m	class:ParsePedestrian
+get_next_train_batch	parsedata\\parse_pedestrian.py	/^	def get_next_train_batch(self, augment=True, shuffle_after_each_epoch=True):$/;"	m	class:ParsePedestrian
 get_num_classes	parsedata\\parse_pedestrian.py	/^	def get_num_classes(self):$/;"	m	class:ParsePedestrian
 log	parsedata\\parse_pedestrian.py	/^import logging as log$/;"	I
 np	parsedata\\parse_pedestrian.py	/^import numpy as np$/;"	I
 tf	parsedata\\parse_pedestrian.py	/^import tensorflow as tf$/;"	I
 Solver	solver.py	/^class Solver():$/;"	c
-_BATCH_SIZE	solver.py	/^	_BATCH_SIZE = 70$/;"	v	class:Solver
+_BATCH_SIZE	solver.py	/^	_BATCH_SIZE = 60$/;"	v	class:Solver
 _LEARNING_RATE	solver.py	/^	_LEARNING_RATE = 0.001$/;"	v	class:Solver
 _TEST_LOG_FOLDER	solver.py	/^	_TEST_LOG_FOLDER = 'test'$/;"	v	class:Solver
 _TRAIN_LOG_FOLDER	solver.py	/^	_TRAIN_LOG_FOLDER = 'train'$/;"	v	class:Solver
 __init__	solver.py	/^	def __init__($/;"	m	class:Solver
+_get_var_count	solver.py	/^	def _get_var_count(self):$/;"	m	class:Solver
+_save_npy	solver.py	/^	def _save_npy(self, save_path):$/;"	m	class:Solver
 log	solver.py	/^import logging as log$/;"	I
 np	solver.py	/^import numpy as np$/;"	I
 predictor	solver.py	/^	def predictor(self, image):$/;"	m	class:Solver
@@ -172,3 +284,4 @@ file_exists	utils.py	/^def file_exists(file_name):$/;"	f
 log	utils.py	/^import logging as log$/;"	I
 np	utils.py	/^import numpy as np$/;"	I
 print_prob	utils.py	/^def print_prob(prob, file_path):$/;"	f
+tf	utils.py	/^import tensorflow as tf$/;"	I

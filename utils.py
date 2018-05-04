@@ -1,4 +1,5 @@
 import os
+import tensorflow as tf
 import logging as log
 import numpy as np
 

@@ -3,7 +3,7 @@ import numpy as np
 import tensorflow as tf
 import logging as log
 from utils import *
-from parsedata.image_utils import *
+from image_utils import *
 from PIL import Image
 
 class ParseDogCat:
