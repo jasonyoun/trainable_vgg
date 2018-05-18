@@ -10,17 +10,12 @@ DATA_TYPE_CUB	main.py	/^DATA_TYPE_CUB = 'cub'$/;"	v
 DATA_TYPE_IMAGENET	main.py	/^DATA_TYPE_IMAGENET = 'imagenet'$/;"	v
 DEFAULT_CODE_DIR	main.py	/^DEFAULT_CODE_DIR = 'D:\\\\Jason_Folder\\\\Yonsei\\\\Research\\\\fine_grained\\\\code'$/;"	v
 DEFAULT_DATASET_DIR	main.py	/^DEFAULT_DATASET_DIR = 'D:\\\\Jason_Folder\\\\Yonsei\\\\Research\\\\dataset'$/;"	v
-FLAGS	main.py	/^	FLAGS = parse_argument()$/;"	v
-FLAGS	main.py	/^FLAGS = None # parser namespace$/;"	v
 LOG_DIR	main.py	/^LOG_DIR = os.path.join(DEFAULT_CODE_DIR, LOG_FOLDER)$/;"	v
 LOG_FOLDER	main.py	/^LOG_FOLDER = 'log'$/;"	v
 NETWORKS_DIR	main.py	/^NETWORKS_DIR = os.path.join(DEFAULT_CODE_DIR, NETWORKS_FOLDER)$/;"	v
 NETWORKS_FOLDER	main.py	/^NETWORKS_FOLDER = 'networks'$/;"	v
 NetworkCommon	networks\\network_common.py	/^class NetworkCommon:$/;"	c
 ParseCub	parsedata\\parse_cub.py	/^class ParseCub:$/;"	c
-ParseDogCat	parsedata\\parse_dogcat.py	/^class ParseDogCat:$/;"	c
-ParseImageNet	parsedata\\parse_imagenet.py	/^class ParseImageNet:$/;"	c
-ParsePedestrian	parsedata\\parse_pedestrian.py	/^class ParsePedestrian:$/;"	c
 ST_VGG	networks\\st_vgg.py	/^class ST_VGG:$/;"	c
 Solver	solver.py	/^class Solver():$/;"	c
 VGG16	networks\\vgg16.py	/^class VGG16:$/;"	c
@@ -42,88 +37,54 @@ X_valid	networks\\stn\\cluttered_mnist.py	/^X_valid = mnist_cluttered['X_valid']
 Y_test	networks\\stn\\cluttered_mnist.py	/^Y_test = dense_to_one_hot(y_test, n_classes=10)$/;"	v
 Y_train	networks\\stn\\cluttered_mnist.py	/^Y_train = dense_to_one_hot(y_train, n_classes=10)$/;"	v
 Y_valid	networks\\stn\\cluttered_mnist.py	/^Y_valid = dense_to_one_hot(y_valid, n_classes=10)$/;"	v
-_BATCH_SIZE	solver.py	/^	_BATCH_SIZE = 60$/;"	v	class:Solver
-_CAT_LABEL	parsedata\\parse_dogcat.py	/^	_CAT_LABEL = 0$/;"	v	class:ParseDogCat
+_BATCH_SIZE	solver.py	/^	_BATCH_SIZE = 32$/;"	v	class:Solver
+_BOUNDING_BOXES_TXT	parsedata\\parse_cub.py	/^	_BOUNDING_BOXES_TXT = 'bounding_boxes.txt'$/;"	v	class:ParseCub
 _CUB_FOLDER	parsedata\\parse_cub.py	/^	_CUB_FOLDER = 'CUB_200_2011'$/;"	v	class:ParseCub
-_CUB_MEAN	parsedata\\parse_cub.py	/^	_CUB_MEAN = [123.93325545, 127.45225929, 110.18862946]$/;"	v	class:ParseCub
-_DOGCAT_FOLDER	parsedata\\parse_dogcat.py	/^	_DOGCAT_FOLDER = 'kaggle_dogcat'$/;"	v	class:ParseDogCat
-_DOGCAT_MEAN	parsedata\\parse_dogcat.py	/^	_DOGCAT_MEAN = [124.27288165, 115.83684239, 106.07509781]$/;"	v	class:ParseDogCat
-_DOG_LABEL	parsedata\\parse_dogcat.py	/^	_DOG_LABEL = 1$/;"	v	class:ParseDogCat
-_IMAGENET_MEAN	parsedata\\parse_imagenet.py	/^	_IMAGENET_MEAN = [123.68, 116.779, 103.939]$/;"	v	class:ParseImageNet
 _IMAGES_FOLDER	parsedata\\parse_cub.py	/^	_IMAGES_FOLDER = 'images'$/;"	v	class:ParseCub
 _IMAGES_TXT	parsedata\\parse_cub.py	/^	_IMAGES_TXT = 'images.txt'$/;"	v	class:ParseCub
 _IMAGE_CLASS_LABELS_TXT	parsedata\\parse_cub.py	/^	_IMAGE_CLASS_LABELS_TXT = 'image_class_labels.txt'$/;"	v	class:ParseCub
-_IMAGE_SIZE	parsedata\\parse_imagenet.py	/^	_IMAGE_SIZE = [224, 224, 3]$/;"	v	class:ParseImageNet
-_LEARNING_RATE	solver.py	/^	_LEARNING_RATE = 0.001$/;"	v	class:Solver
-_NEG_FOLDER	parsedata\\parse_pedestrian.py	/^	_NEG_FOLDER = 'neg'$/;"	v	class:ParsePedestrian
-_NEG_LABEL	parsedata\\parse_pedestrian.py	/^	_NEG_LABEL = 0$/;"	v	class:ParsePedestrian
 _NUM_CLASSES	parsedata\\parse_cub.py	/^	_NUM_CLASSES = 200$/;"	v	class:ParseCub
-_NUM_CLASSES	parsedata\\parse_dogcat.py	/^	_NUM_CLASSES = 2$/;"	v	class:ParseDogCat
-_NUM_CLASSES	parsedata\\parse_imagenet.py	/^	_NUM_CLASSES = 1000$/;"	v	class:ParseImageNet
-_NUM_CLASSES	parsedata\\parse_pedestrian.py	/^	_NUM_CLASSES = 2$/;"	v	class:ParsePedestrian
-_NUM_NEG_TEST_DATA	parsedata\\parse_pedestrian.py	/^	_NUM_NEG_TEST_DATA = 4504$/;"	v	class:ParsePedestrian
-_NUM_NEG_TRAIN_DATA	parsedata\\parse_pedestrian.py	/^	_NUM_NEG_TRAIN_DATA = 5000$/;"	v	class:ParsePedestrian
-_NUM_POS_TEST_DATA	parsedata\\parse_pedestrian.py	/^	_NUM_POS_TEST_DATA = 1178$/;"	v	class:ParsePedestrian
-_NUM_POS_TRAIN_DATA	parsedata\\parse_pedestrian.py	/^	_NUM_POS_TRAIN_DATA = 1237$/;"	v	class:ParsePedestrian
-_NUM_TEST_IMGS	parsedata\\parse_cub.py	/^	_NUM_TEST_IMGS = _NUM_TOTAL_IMGS - _NUM_TRAIN_IMGS$/;"	v	class:ParseCub
+_NUM_TEST_IMGS	parsedata\\parse_cub.py	/^	_NUM_TEST_IMGS = _NUM_TOTAL_IMGS - _NUM_TRAIN_IMGS - _NUM_VAL_IMGS$/;"	v	class:ParseCub
 _NUM_TOTAL_IMGS	parsedata\\parse_cub.py	/^	_NUM_TOTAL_IMGS = 11788$/;"	v	class:ParseCub
-_NUM_TRAIN_IMGS	parsedata\\parse_cub.py	/^	_NUM_TRAIN_IMGS = 9000$/;"	v	class:ParseCub
-_PEDESTRIAN_FOLDER	parsedata\\parse_pedestrian.py	/^	_PEDESTRIAN_FOLDER = 'pedestrian_xing'$/;"	v	class:ParsePedestrian
-_PEDESTRIAN_MEAN	parsedata\\parse_pedestrian.py	/^	_PEDESTRIAN_MEAN = [114.86996197, 114.63007618, 108.72589651]$/;"	v	class:ParsePedestrian
-_POS_FOLDER	parsedata\\parse_pedestrian.py	/^	_POS_FOLDER = 'pos'$/;"	v	class:ParsePedestrian
-_POS_LABEL	parsedata\\parse_pedestrian.py	/^	_POS_LABEL = 1$/;"	v	class:ParsePedestrian
-_TEST_FOLDER	parsedata\\parse_dogcat.py	/^	_TEST_FOLDER = 'test'$/;"	v	class:ParseDogCat
-_TEST_FOLDER	parsedata\\parse_pedestrian.py	/^	_TEST_FOLDER = 'test'$/;"	v	class:ParsePedestrian
+_NUM_TRAIN_IMGS	parsedata\\parse_cub.py	/^	_NUM_TRAIN_IMGS = 8251$/;"	v	class:ParseCub
+_NUM_VAL_IMGS	parsedata\\parse_cub.py	/^	_NUM_VAL_IMGS = 1768$/;"	v	class:ParseCub
+_ST_VGG	solver.py	/^	_ST_VGG = 'st_vgg'$/;"	v	class:Solver
 _TEST_LIST	parsedata\\parse_cub.py	/^	_TEST_LIST = 'test_list.txt'$/;"	v	class:ParseCub
-_TEST_LIST	parsedata\\parse_pedestrian.py	/^	_TEST_LIST = 'test_list.txt'$/;"	v	class:ParsePedestrian
 _TEST_LOG_FOLDER	solver.py	/^	_TEST_LOG_FOLDER = 'test'$/;"	v	class:Solver
-_TOTAL_TEST_DATA	parsedata\\parse_pedestrian.py	/^	_TOTAL_TEST_DATA = 5682$/;"	v	class:ParsePedestrian
-_TOTAL_TRAIN_DATA	parsedata\\parse_dogcat.py	/^	_TOTAL_TRAIN_DATA = 25000$/;"	v	class:ParseDogCat
-_TOTAL_TRAIN_DATA	parsedata\\parse_pedestrian.py	/^	_TOTAL_TRAIN_DATA = 6237$/;"	v	class:ParsePedestrian
-_TRAIN_DATA_PER_CLASS	parsedata\\parse_dogcat.py	/^	_TRAIN_DATA_PER_CLASS = 12500$/;"	v	class:ParseDogCat
-_TRAIN_FOLDER	parsedata\\parse_dogcat.py	/^	_TRAIN_FOLDER = 'train'$/;"	v	class:ParseDogCat
-_TRAIN_FOLDER	parsedata\\parse_pedestrian.py	/^	_TRAIN_FOLDER = 'train'$/;"	v	class:ParsePedestrian
 _TRAIN_LIST	parsedata\\parse_cub.py	/^	_TRAIN_LIST = 'train_list.txt'$/;"	v	class:ParseCub
-_TRAIN_LIST	parsedata\\parse_dogcat.py	/^	_TRAIN_LIST = 'train_list.txt'$/;"	v	class:ParseDogCat
-_TRAIN_LIST	parsedata\\parse_pedestrian.py	/^	_TRAIN_LIST = 'train_list.txt'$/;"	v	class:ParsePedestrian
 _TRAIN_LOG_FOLDER	solver.py	/^	_TRAIN_LOG_FOLDER = 'train'$/;"	v	class:Solver
-__init__	networks\\network_common.py	/^	def __init__(self, init_layers, data_dict, trainable):$/;"	m	class:NetworkCommon
-__init__	networks\\st_vgg.py	/^	def __init__(self, mean_rgb, num_classes=None, loc_vgg_npy_path=None, cls_vgg_npy_path=None,$/;"	m	class:ST_VGG
-__init__	networks\\vgg16.py	/^	def __init__(self, mean_rgb, num_classes=None, vgg16_npy_path=None,$/;"	m	class:VGG16
-__init__	networks\\vgg19.py	/^	def __init__(self, mean_rgb, num_classes=None, vgg19_npy_path=None, init_layers=None, trainable/;"	m	class:VGG19
+_VAL_LIST	parsedata\\parse_cub.py	/^	_VAL_LIST = 'val_list.txt'$/;"	v	class:ParseCub
+_VAL_LOG_FOLDER	solver.py	/^	_VAL_LOG_FOLDER = 'val'$/;"	v	class:Solver
+_VGG16	solver.py	/^	_VGG16 = 'vgg16'$/;"	v	class:Solver
+_VGG19	solver.py	/^	_VGG19 = 'vgg19'$/;"	v	class:Solver
+_VGG_RGB_MEAN	networks\\vgg16.py	/^	_VGG_RGB_MEAN = [123.68, 116.779, 103.939]$/;"	v	class:VGG16
+_VGG_RGB_MEAN	networks\\vgg19.py	/^	_VGG_RGB_MEAN = [123.68, 116.779, 103.939]$/;"	v	class:VGG19
+__init__	networks\\network_common.py	/^	def __init__(self, init_layers, npy_path, trainable):$/;"	m	class:NetworkCommon
+__init__	networks\\st_vgg.py	/^	def __init__(self, num_classes=None, loc_vgg_npy_path=None, cls_vgg_npy_path=None,$/;"	m	class:ST_VGG
+__init__	networks\\vgg16.py	/^	def __init__(self, num_classes=None, vgg16_npy_path=None,$/;"	m	class:VGG16
+__init__	networks\\vgg19.py	/^	def __init__(self, num_classes=None, vgg19_npy_path=None,$/;"	m	class:VGG19
 __init__	parsedata\\parse_cub.py	/^	def __init__(self, dataset_dir, resize, crop_shape, batch_size, isotropical=False, initial_load/;"	m	class:ParseCub
-__init__	parsedata\\parse_dogcat.py	/^	def __init__(self, dataset_dir, crop_shape, batch_size, resize=256, initial_load=False):$/;"	m	class:ParseDogCat
-__init__	parsedata\\parse_imagenet.py	/^	def __init__(self, batch_size):$/;"	m	class:ParseImageNet
-__init__	parsedata\\parse_pedestrian.py	/^	def __init__(self, dataset_dir, resize, crop_shape, batch_size, isotropical=False, initial_load/;"	m	class:ParsePedestrian
 __init__	solver.py	/^	def __init__($/;"	m	class:Solver
-_batch_idx	parsedata\\parse_cub.py	/^	_batch_idx = None$/;"	v	class:ParseCub
-_batch_idx	parsedata\\parse_dogcat.py	/^	_batch_idx = None$/;"	v	class:ParseDogCat
-_batch_idx	parsedata\\parse_pedestrian.py	/^	_batch_idx = None$/;"	v	class:ParsePedestrian
-_file_list	parsedata\\parse_dogcat.py	/^	_file_list = None$/;"	v	class:ParseDogCat
+_file_list_2_bb	parsedata\\parse_cub.py	/^	def _file_list_2_bb(self):$/;"	m	class:ParseCub
+_fill_bb_list	parsedata\\parse_cub.py	/^			def _fill_bb_list(file_list, bb_list):$/;"	f	member:ParseCub._file_list_2_bb	file:
 _get_conv_var	networks\\network_common.py	/^	def _get_conv_var(self, filter_size, in_channels, out_channels, name):$/;"	m	class:NetworkCommon
 _get_fc_var	networks\\network_common.py	/^	def _get_fc_var(self, in_size, out_size, init_weight, init_bias, name):$/;"	m	class:NetworkCommon
 _get_var	networks\\network_common.py	/^	def _get_var(self, initial_value, name, idx, var_name):$/;"	m	class:NetworkCommon
 _get_var_count	solver.py	/^	def _get_var_count(self):$/;"	m	class:Solver
 _interpolate	networks\\stn\\spatial_transformer.py	/^	def _interpolate(im, x, y, out_size):$/;"	f	function:transformer	file:
-_label_list	parsedata\\parse_dogcat.py	/^	_label_list = None$/;"	v	class:ParseDogCat
 _load_list	parsedata\\parse_cub.py	/^	def _load_list(self):$/;"	m	class:ParseCub
-_load_list	parsedata\\parse_dogcat.py	/^	def _load_list(self):$/;"	m	class:ParseDogCat
-_load_list	parsedata\\parse_pedestrian.py	/^	def _load_list(self):$/;"	m	class:ParsePedestrian
 _make_list	parsedata\\parse_cub.py	/^	def _make_list(self):$/;"	m	class:ParseCub
-_make_list	parsedata\\parse_dogcat.py	/^	def _make_list(self):$/;"	m	class:ParseDogCat
-_make_list	parsedata\\parse_pedestrian.py	/^	def _make_list(self):$/;"	m	class:ParsePedestrian
 _meshgrid	networks\\stn\\spatial_transformer.py	/^	def _meshgrid(height, width):$/;"	f	function:transformer	file:
+_modify_bb	image_utils.py	/^def _modify_bb(crop_height, crop_width, ws, hs, bounding_box):$/;"	f
 _repeat	networks\\stn\\spatial_transformer.py	/^	def _repeat(x, n_repeats):$/;"	f	function:transformer	file:
-_save_npy	solver.py	/^	def _save_npy(self, save_path):$/;"	m	class:Solver
+_test_batch_idx	parsedata\\parse_cub.py	/^	_test_batch_idx = None$/;"	v	class:ParseCub
 _test_file_list	parsedata\\parse_cub.py	/^	_test_file_list = None$/;"	v	class:ParseCub
-_test_file_list	parsedata\\parse_pedestrian.py	/^	_test_file_list = None$/;"	v	class:ParsePedestrian
 _test_label_list	parsedata\\parse_cub.py	/^	_test_label_list = None$/;"	v	class:ParseCub
-_test_label_list	parsedata\\parse_pedestrian.py	/^	_test_label_list = None$/;"	v	class:ParsePedestrian
+_train_batch_idx	parsedata\\parse_cub.py	/^	_train_batch_idx = None$/;"	v	class:ParseCub
 _train_file_list	parsedata\\parse_cub.py	/^	_train_file_list = None$/;"	v	class:ParseCub
-_train_file_list	parsedata\\parse_pedestrian.py	/^	_train_file_list = None$/;"	v	class:ParsePedestrian
 _train_label_list	parsedata\\parse_cub.py	/^	_train_label_list = None$/;"	v	class:ParseCub
-_train_label_list	parsedata\\parse_pedestrian.py	/^	_train_label_list = None$/;"	v	class:ParsePedestrian
 _transform	networks\\stn\\spatial_transformer.py	/^	def _transform(theta, input_dim, out_size):$/;"	f	function:transformer	file:
+_val_batch_idx	parsedata\\parse_cub.py	/^	_val_batch_idx = None$/;"	v	class:ParseCub
 accuracy	networks\\stn\\cluttered_mnist.py	/^accuracy = tf.reduce_mean(tf.cast(correct_prediction, 'float'))$/;"	v
 augment_image_batch	image_utils.py	/^def augment_image_batch($/;"	f
 avg_pool	networks\\network_common.py	/^	def avg_pool(self, inputs, name):$/;"	m	class:NetworkCommon
@@ -136,42 +97,37 @@ b_fc_loc1	networks\\stn\\cluttered_mnist.py	/^b_fc_loc1 = bias_variable([20])$/;
 b_fc_loc2	networks\\stn\\cluttered_mnist.py	/^b_fc_loc2 = tf.Variable(initial_value=initial, name='b_fc_loc2')$/;"	v
 batch	networks\\stn\\example.py	/^batch = np.append(batch, im, axis=0)$/;"	v
 batch	networks\\stn\\example.py	/^batch = np.append(im, im, axis=0)$/;"	v
+batch_concat_scale_translate	networks\\st_vgg.py	/^			def batch_concat_scale_translate(x):$/;"	f	member:ST_VGG.build	file:
+batch_concat_translate	networks\\st_vgg.py	/^			def batch_concat_translate(x):$/;"	f	member:ST_VGG.build	file:
 batch_transformer	networks\\stn\\spatial_transformer.py	/^def batch_transformer(U, thetas, out_size, name='BatchSpatialTransformer'):$/;"	f
 batch_xs	networks\\stn\\cluttered_mnist.py	/^		batch_xs = X_train[indices[iter_i]:indices[iter_i+1]]$/;"	v
 batch_ys	networks\\stn\\cluttered_mnist.py	/^		batch_ys = Y_train[indices[iter_i]:indices[iter_i+1]]$/;"	v
 bias_variable	networks\\stn\\tf_utils.py	/^def bias_variable(shape):$/;"	f
-build	networks\\st_vgg.py	/^	def build(self, rgb, train_mode=None):$/;"	m	class:ST_VGG
+build	networks\\st_vgg.py	/^	def build(self, rgb, train_mode=None, **kwargs):$/;"	m	class:ST_VGG
 build	networks\\vgg16.py	/^	def build(self, rgb, train_mode=None):$/;"	m	class:VGG16
 build	networks\\vgg19.py	/^	def build(self, rgb, train_mode=None):$/;"	m	class:VGG19
 build_partial	networks\\vgg16.py	/^	def build_partial(self, rgb, build_until, train_mode=None):$/;"	m	class:VGG16
 build_partial	networks\\vgg19.py	/^	def build_partial(self, rgb, build_until, train_mode=None):$/;"	m	class:VGG19
 centered_bgr_2_rgb	image_utils.py	/^def centered_bgr_2_rgb(centered_bgr, mean_rgb):$/;"	f
+central_crop	image_utils.py	/^def central_crop(input_img, crop_height, crop_width):$/;"	f
+central_crop_with_bb	image_utils.py	/^def central_crop_with_bb(input_img, crop_height, crop_width, bounding_box):$/;"	f
 conv2d	networks\\stn\\tf_utils.py	/^def conv2d(x, n_filters,$/;"	f
-conv_layer	networks\\network_common.py	/^	def conv_layer(self, inputs, filter_size, in_channels, out_channels, name):$/;"	m	class:NetworkCommon
+conv_layer	networks\\network_common.py	/^	def conv_layer(self, inputs, filter_size, in_channels, out_channels, name, do_batch_norm=False)/;"	m	class:NetworkCommon
 correct_prediction	networks\\stn\\cluttered_mnist.py	/^correct_prediction = tf.equal(tf.argmax(y_logits, 1), tf.argmax(y, 1))$/;"	v
 cross_entropy	networks\\stn\\cluttered_mnist.py	/^cross_entropy = tf.reduce_mean($/;"	v
 dense_to_one_hot	networks\\stn\\tf_utils.py	/^def dense_to_one_hot(labels, n_classes=2):$/;"	f
 dir_exists	utils.py	/^def dir_exists(dir_name):$/;"	f
+draw_bounding_boxes	image_utils.py	/^def draw_bounding_boxes(images, bounding_boxes):$/;"	f
 dropout_layer	networks\\network_common.py	/^	def dropout_layer(self, inputs, dropout_rate, train_mode, name):$/;"	m	class:NetworkCommon
-fc_layer	networks\\network_common.py	/^	def fc_layer(self, inputs, in_size, out_size, is_last, name, **kwargs):$/;"	m	class:NetworkCommon
+entry_stop_gradients	networks\\network_common.py	/^	def entry_stop_gradients(self, target, mask):$/;"	m	class:NetworkCommon
+fc_layer	networks\\network_common.py	/^	def fc_layer(self, inputs, out_size, is_last, name, do_batch_norm=False, activation_fn=None, **/;"	m	class:NetworkCommon
 file_exists	utils.py	/^def file_exists(file_name):$/;"	f
 filter_size	networks\\stn\\cluttered_mnist.py	/^filter_size = 3$/;"	v
 get_image_mean	image_utils.py	/^def get_image_mean(list_file, resize=None, isotropical=False):$/;"	f
-get_image_size	parsedata\\parse_imagenet.py	/^	def get_image_size(self):$/;"	m	class:ParseImageNet
-get_mean	parsedata\\parse_cub.py	/^	def get_mean(self):$/;"	m	class:ParseCub
-get_mean	parsedata\\parse_dogcat.py	/^	def get_mean(self):$/;"	m	class:ParseDogCat
-get_mean	parsedata\\parse_imagenet.py	/^	def get_mean(self):$/;"	m	class:ParseImageNet
-get_mean	parsedata\\parse_pedestrian.py	/^	def get_mean(self):$/;"	m	class:ParsePedestrian
 get_next_test_batch	parsedata\\parse_cub.py	/^	def get_next_test_batch(self):$/;"	m	class:ParseCub
-get_next_test_batch	parsedata\\parse_pedestrian.py	/^	def get_next_test_batch(self):$/;"	m	class:ParsePedestrian
-get_next_train_batch	parsedata\\parse_cub.py	/^	def get_next_train_batch(self, augment=True, shuffle_after_each_epoch=True):$/;"	m	class:ParseCub
-get_next_train_batch	parsedata\\parse_dogcat.py	/^	def get_next_train_batch(self):$/;"	m	class:ParseDogCat
-get_next_train_batch	parsedata\\parse_imagenet.py	/^	def get_next_train_batch(self):$/;"	m	class:ParseImageNet
-get_next_train_batch	parsedata\\parse_pedestrian.py	/^	def get_next_train_batch(self, augment=True, shuffle_after_each_epoch=True):$/;"	m	class:ParsePedestrian
+get_next_train_batch	parsedata\\parse_cub.py	/^	def get_next_train_batch(self, augment=True):$/;"	m	class:ParseCub
+get_next_val_batch	parsedata\\parse_cub.py	/^	def get_next_val_batch(self):$/;"	m	class:ParseCub
 get_num_classes	parsedata\\parse_cub.py	/^	def get_num_classes(self):$/;"	m	class:ParseCub
-get_num_classes	parsedata\\parse_dogcat.py	/^	def get_num_classes(self):$/;"	m	class:ParseDogCat
-get_num_classes	parsedata\\parse_imagenet.py	/^	def get_num_classes(self):$/;"	m	class:ParseImageNet
-get_num_classes	parsedata\\parse_pedestrian.py	/^	def get_num_classes(self):$/;"	m	class:ParsePedestrian
 grads	networks\\stn\\cluttered_mnist.py	/^grads = opt.compute_gradients(cross_entropy, [b_fc_loc2])$/;"	v
 h_conv1	networks\\stn\\cluttered_mnist.py	/^h_conv1 = tf.nn.relu($/;"	v
 h_conv2	networks\\stn\\cluttered_mnist.py	/^h_conv2 = tf.nn.relu($/;"	v
@@ -208,13 +164,10 @@ log	networks\\st_vgg.py	/^import logging as log$/;"	I
 log	networks\\vgg16.py	/^import logging as log$/;"	I
 log	networks\\vgg19.py	/^import logging as log$/;"	I
 log	parsedata\\parse_cub.py	/^import logging as log$/;"	I
-log	parsedata\\parse_dogcat.py	/^import logging as log$/;"	I
-log	parsedata\\parse_imagenet.py	/^import logging as log$/;"	I
-log	parsedata\\parse_pedestrian.py	/^import logging as log$/;"	I
 log	solver.py	/^import logging as log$/;"	I
 log	utils.py	/^import logging as log$/;"	I
 loss	networks\\stn\\cluttered_mnist.py	/^			loss = sess.run(cross_entropy,$/;"	v
-max_pool	networks\\network_common.py	/^	def max_pool(self, inputs, name):$/;"	m	class:NetworkCommon
+max_pool	networks\\network_common.py	/^	def max_pool(self, inputs, name, stride=2):$/;"	m	class:NetworkCommon
 mnist_cluttered	networks\\stn\\cluttered_mnist.py	/^mnist_cluttered = np.load('.\/data\/mnist_sequence1_sample_5distortions5x5.npz')$/;"	v
 n_epochs	networks\\stn\\cluttered_mnist.py	/^n_epochs = 500$/;"	v
 n_fc	networks\\stn\\cluttered_mnist.py	/^n_fc = 1024$/;"	v
@@ -231,9 +184,6 @@ np	networks\\stn\\tf_utils.py	/^import numpy as np$/;"	I
 np	networks\\vgg16.py	/^import numpy as np$/;"	I
 np	networks\\vgg19.py	/^import numpy as np$/;"	I
 np	parsedata\\parse_cub.py	/^import numpy as np$/;"	I
-np	parsedata\\parse_dogcat.py	/^import numpy as np$/;"	I
-np	parsedata\\parse_imagenet.py	/^import numpy as np$/;"	I
-np	parsedata\\parse_pedestrian.py	/^import numpy as np$/;"	I
 np	solver.py	/^import numpy as np$/;"	I
 np	utils.py	/^import numpy as np$/;"	I
 num_batch	networks\\stn\\example.py	/^num_batch = 3$/;"	v
@@ -241,19 +191,19 @@ opt	networks\\stn\\cluttered_mnist.py	/^opt = tf.train.AdamOptimizer()$/;"	v
 optimizer	networks\\stn\\cluttered_mnist.py	/^optimizer = opt.minimize(cross_entropy)$/;"	v
 out_size	networks\\stn\\cluttered_mnist.py	/^out_size = (40, 40)$/;"	v
 out_size	networks\\stn\\example.py	/^out_size = (600, 800)$/;"	v
-parse_argument	main.py	/^def parse_argument():$/;"	f
 plt	main.py	/^import matplotlib.pyplot as plt$/;"	I
 plt	networks\\stn\\example.py	/^import matplotlib.pyplot as plt$/;"	I
+plt	solver.py	/^import matplotlib.pyplot as plt$/;"	I
 predictor	solver.py	/^	def predictor(self, image):$/;"	m	class:Solver
 print_prob	utils.py	/^def print_prob(prob, file_path):$/;"	f
 random_crop	image_utils.py	/^def random_crop(input_img, crop_height, crop_width):$/;"	f
+random_crop_with_bb	image_utils.py	/^def random_crop_with_bb(input_img, crop_height, crop_width, bounding_box):$/;"	f
 rgb_2_centered_bgr	image_utils.py	/^def rgb_2_centered_bgr(rgb, mean_rgb):$/;"	f
+save_npy	solver.py	/^	def save_npy(self, save_path, scope=None):$/;"	m	class:Solver
 sess	networks\\stn\\cluttered_mnist.py	/^sess = tf.Session()$/;"	v
 sess	networks\\stn\\example.py	/^sess = tf.Session()$/;"	v
 set_logging	main.py	/^def set_logging():$/;"	f
-solver	main.py	/^		solver = Solver($/;"	v
-test_img	main.py	/^	test_img = Image.open('laska.png').convert('RGB').resize((224,224))$/;"	v
-test_img	main.py	/^	test_img = np.array(test_img, dtype=np.float32).reshape((1, 224, 224, 3))$/;"	v
+st_vgg_func	main.py	/^def st_vgg_func(mode='train'):$/;"	f
 tester	solver.py	/^	def tester(self):$/;"	m	class:Solver
 tf	image_utils.py	/^import tensorflow as tf$/;"	I
 tf	main.py	/^import tensorflow as tf$/;"	I
@@ -266,14 +216,12 @@ tf	networks\\stn\\tf_utils.py	/^import tensorflow as tf$/;"	I
 tf	networks\\vgg16.py	/^import tensorflow as tf$/;"	I
 tf	networks\\vgg19.py	/^import tensorflow as tf$/;"	I
 tf	parsedata\\parse_cub.py	/^import tensorflow as tf$/;"	I
-tf	parsedata\\parse_dogcat.py	/^import tensorflow as tf$/;"	I
-tf	parsedata\\parse_imagenet.py	/^import tensorflow as tf$/;"	I
-tf	parsedata\\parse_pedestrian.py	/^import tensorflow as tf$/;"	I
 tf	solver.py	/^import tensorflow as tf$/;"	I
 tf	utils.py	/^import tensorflow as tf$/;"	I
 train_size	networks\\stn\\cluttered_mnist.py	/^train_size = 10000$/;"	v
-trainer	solver.py	/^	def trainer(self, epochs=100, updated_weights_path=None):$/;"	m	class:Solver
+trainer	solver.py	/^	def trainer($/;"	m	class:Solver
 transformer	networks\\stn\\spatial_transformer.py	/^def transformer(U, theta, out_size, name='SpatialTransformer', **kwargs):$/;"	f
+vgg_cub_ft_func	main.py	/^def vgg_cub_ft_func(mode='train'):$/;"	f
 weight_variable	networks\\stn\\tf_utils.py	/^def weight_variable(shape):$/;"	f
 x	networks\\stn\\cluttered_mnist.py	/^x = tf.placeholder(tf.float32, [None, 1600])$/;"	v
 x	networks\\stn\\example.py	/^x = tf.cast(batch, 'float32')$/;"	v

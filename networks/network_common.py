@@ -8,18 +8,22 @@ class NetworkCommon:
 	Common functions for the convolutional network.
 	"""
 
-	def __init__(self, init_layers, data_dict, trainable):
+	def __init__(self, init_layers, npy_path, trainable):
 		"""
 		Constructor for the NetworkCommon class.
 
 		Inputs:
 			- init_layers: force the specified layers in this python list to
 				truncated_normal instead of loading from the data_dict
-			- data_dict: dictionary containing the weights loaded from npy
+			- npy_path: dictionary containing the weights loaded from npy
 			- trainable: boolean. True is trainable
 		"""
+		if npy_path is not None:
+			self.data_dict = np.load(npy_path, encoding='latin1').item()
+		else:
+			self.data_dict = None
+
 		self.init_layers = init_layers
-		self.data_dict = data_dict
 		self.trainable = trainable
 		self.var_dict = {}
 

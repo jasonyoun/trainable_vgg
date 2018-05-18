@@ -26,14 +26,9 @@ class VGG16:
 			- trainable: boolean. True if tf.Variable False if tf.constant
 			- dropout_rate: dropout rate
 		"""
-		if vgg16_npy_path is not None:
-			data_dict = np.load(vgg16_npy_path, encoding='latin1').item()
-		else:
-			data_dict = None
-
 		self.num_classes = num_classes
 		self.dropout_rate = dropout_rate
-		self.nc = NetworkCommon(init_layers, data_dict, trainable)
+		self.nc = NetworkCommon(init_layers, vgg16_npy_path, trainable)
 
 	def build(self, rgb, train_mode=None):
 		"""
@@ -48,7 +43,7 @@ class VGG16:
 			- prob: probability output
 		"""
 
-		log.info('Full VGG 16 model build started')
+		log.info('Full VGG-16 model build started')
 
 		# call build_partial() to build the full network until 'fc8' layer
 		fc8 = self.build_partial(rgb, 'fc8', train_mode=train_mode)
@@ -56,7 +51,7 @@ class VGG16:
 		# softmax loss
 		prob = tf.nn.softmax(fc8, name="prob")
 
-		log.info('Full VGG 16 model build finished')
+		log.info('Full VGG-16 model build finished')
 
 		return fc8, prob
 
@@ -74,7 +69,7 @@ class VGG16:
 			- layer specified by the input 'build_until'
 		"""
 
-		log.info('Partial VGG 16 model build started')
+		log.info('Partial VGG-16 model build started')
 
 		tf.summary.image('input', rgb, 3)
 
@@ -137,4 +132,4 @@ class VGG16:
 		fc8 = self.nc.fc_layer(dropout7, self.num_classes, True, 'fc8')
 		if build_until is 'fc8': return fc8
 
-		log.warning('Matching keyword not found for partial VGG 16 model build!')
+		raise RuntimeError('Matching keyword not found for partial VGG-16 model build!')

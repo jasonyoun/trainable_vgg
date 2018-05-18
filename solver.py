@@ -3,7 +3,7 @@ import re
 import numpy as np
 import tensorflow as tf
 import logging as log
-from parsedata.parse_imagenet import ParseImageNet
+import matplotlib.pyplot as plt
 from parsedata.parse_cub import ParseCub
 from networks.vgg16 import VGG16
 from networks.vgg19 import VGG19
@@ -15,6 +15,16 @@ class Solver():
 	_TRAIN_LOG_FOLDER = 'train'
 	_VAL_LOG_FOLDER = 'val'
 	_TEST_LOG_FOLDER = 'test'
+
+	# dataset types
+	_CUB = 'cub'
+
+	# network types
+	_VGG16 = 'vgg16'
+	_VGG19 = 'vgg19'
+	_ST_VGG = 'st_vgg'
+
+	# other variables
 	_BATCH_SIZE = 32
 
 	def __init__(
@@ -28,10 +38,32 @@ class Solver():
 			log_dir,
 			weights_path=None,
 			init_layers=None):
+		"""
+		Solver class constructor.
+
+		Inputs:
+			- sess: tensorflow session called before must be fed in
+			- dataset_type: string denoting which dataset type to use
+			- dataset_dir: parent directory of where all datasets are
+			- resize: python tuple format denoting how the batch should
+				be resized BEFORE crop (ex. (width, height))
+			- crop_shape: python tuple format denoting how to crop the
+				batch AFTER resizing (ex. (width, height))
+			- network_type: string denoting which network type to use
+			- log_dir: parent directory where the log should be dumped to
+			- weights_path: if loading the network with pre-trained weights,
+				specify its path here. if using more than two paths,
+				use python list to feed in multiple paths
+			- init_layers: if performing fine-tuning and need to random
+				init some layers, specify them here in python list format
+				containing variables to initialize in string format
+		"""
 
 		self.sess = sess
+		self.dataset_type = dataset_type
+		self.network_type = network_type
 
-		if dataset_type is 'cub':
+		if self.dataset_type is self._CUB:
 			self.dataset = ParseCub(
 				dataset_dir=dataset_dir,
 				resize=resize,
@@ -39,20 +71,18 @@ class Solver():
 				batch_size=self._BATCH_SIZE,
 				isotropical=True,
 				initial_load=False)
-		elif dataset_type is 'imagenet':
-			self.dataset = ParseImageNet(batch_size=self._BATCH_SIZE)
 
-		if network_type is 'vgg16':
+		if self.network_type is self._VGG16:
 			self.network = VGG16(
 				num_classes=self.dataset.get_num_classes(),
 				vgg16_npy_path=weights_path,
 				init_layers=init_layers)
-		elif network_type is 'vgg19':
+		elif self.network_type is self._VGG19:
 			self.network = VGG19(
 				num_classes=self.dataset.get_num_classes(),
 				vgg19_npy_path=weights_path,
 				init_layers=init_layers)
-		elif network_type is 'st_vgg':
+		elif self.network_type is self._ST_VGG:
 			self.network = ST_VGG(
 				num_classes=self.dataset.get_num_classes(),
 				loc_vgg_npy_path=weights_path[0],
@@ -69,8 +99,16 @@ class Solver():
 		self.learning_rate = tf.placeholder(tf.float32)
 		self.learning_rate_fast = tf.placeholder(tf.float32)
 
+		if self.network_type is self._ST_VGG:
+			self.gt_bounding_box = tf.placeholder(tf.float32, (None, 4))
+
 		# build the network
-		self.logits, self.prob = self.network.build(self.images, self.train_mode)
+		if self.network_type is self._ST_VGG:
+			self.logits, self.prob, self.pred_bounding_box = self.network.build(
+				self.images, self.train_mode, gt_bounding_box=self.gt_bounding_box)
+		else:
+			self.logits, self.prob = self.network.build(
+				self.images, self.train_mode)
 
 		log.debug('Network variables count: {}'.format(self._get_var_count()))
 
@@ -84,6 +122,25 @@ class Solver():
 			save_path=None,
 			save_scope=[],
 			save_epoch=[]):
+		"""
+		Train using the training dataset while also performing validation.
+		Solver class must be initialized appropriately to run correctly.
+
+		Inputs:
+			- learning_rate: normal learning rate to train the network with
+			- epochs: number of epochs to train
+			- learning_rate_fast: when specified, perform layer-wise training.
+				must be used with 'lr_fast_vars'.
+			- lr_fast_vars: python list containing strings of network variables
+				that need to be trained with faster learning rate specified above
+			- l2_regularization_decay: if not 0, perform L2 regularization using
+				this value as lambda (0 <= l2_regularization_decay <= 1)
+			- save_path: path to save the variables to in .npy format
+			- save_scope: python list containing strings of scope for saving the weights
+				(ex. ['classification', 'localization'])
+			- save_epoch: python list containing integers of different epochs
+				when the variables should be saved to .npy format (ex. [100, 110])
+		"""
 		# variables
 		iteration = 0
 		is_last = False
@@ -103,20 +160,32 @@ class Solver():
 			for v in regularization_vars:
 				log.debug('  {} {}'.format(v.name, v.get_shape().as_list()))
 
-		# define loss
+		###############
+		# define loss #
+		###############
 		total_loss = tf.losses.softmax_cross_entropy(self.true_out, self.logits)
+		mean_loss = tf.reduce_mean(total_loss)
+
+		# L2 regularization specified, we add it to the loss
 		if l2_regularization_decay > 0:
-			mean_loss = tf.reduce_mean(total_loss) + loss_L2
-		else:
-			mean_loss = tf.reduce_mean(total_loss)
+			mean_loss = mean_loss + loss_L2
+
+		# if training st_vgg network, we also add L2 distance loss for bounding box
+		if self.network_type is self._ST_VGG:
+			mean_loss += tf.nn.l2_loss(self.pred_bounding_box - self.gt_bounding_box)
+
 		tf.summary.scalar('mean_loss', mean_loss)
 
-		# accuracy
+		############
+		# accuracy #
+		############
 		correct_prediction = tf.equal(tf.argmax(self.prob, 1), tf.argmax(self.true_out, 1))
 		accuracy = tf.reduce_mean(tf.cast(correct_prediction, tf.float32))
 		tf.summary.scalar('accuracy', accuracy)
 
-		# define optimizer
+		####################
+		# define optimizer #
+		####################
 		if learning_rate_fast is not None and lr_fast_vars is not None: # layer-wise optimizer
 			fast_lr_vars = [v for v in trainable_vars if v.name.split(':')[0] in lr_fast_vars]
 			normal_lr_vars = [v for v in trainable_vars if v not in fast_lr_vars]
@@ -151,7 +220,9 @@ class Solver():
 
 			tf.summary.scalar('learning_rate', self.learning_rate)
 
-		# summaries
+		#############
+		# summaries #
+		#############
 		merged = tf.summary.merge_all()
 		train_writer = tf.summary.FileWriter(self.train_log_path, self.sess.graph)
 		val_writer = tf.summary.FileWriter(self.val_log_path, self.sess.graph)
@@ -163,9 +234,9 @@ class Solver():
 			log.info('Current epoch: {}'.format(e))
 
 			# weight decay if necessary
-			# if e is 60:
-			#  	learning_rate_fast /= 2
-			#  	learning_rate /= 2
+			if e is 100:
+			 	learning_rate_fast /= 10
+			 	learning_rate /= 10
 
 			# if e is 70:
 			#  	learning_rate_fast /= 2
@@ -173,44 +244,54 @@ class Solver():
 
 			while is_last is False:
 				# get next train batch
-				train_batch, train_label, is_last = self.dataset.get_next_train_batch(augment=True)
+				train_batch_return = self.dataset.get_next_train_batch(augment=True)
+				if self.dataset_type is self._CUB:
+					train_batch, train_label, train_bb, is_last = train_batch_return
+				else:
+					train_batch, train_label, is_last = train_batch_return
 
-				# create feed dictionary
-				feed_dict = {self.images: train_batch,
-							 self.true_out: train_label,
-							 self.train_mode: True,
+				# create initial partially empty feed dictionary
+				# (will keep updating later)
+				feed_dict = {self.images: None,
+							 self.true_out: None,
+							 self.train_mode: None,
 							 self.learning_rate: learning_rate,
 							 self.learning_rate_fast: learning_rate_fast}
 
-				# run train op
-				self.sess.run(train_op, feed_dict=feed_dict)
+				# run train / validation summaries and write to log
+				if iteration%10 == 0:
+					# update validation feed dictionary
+					feed_dict[self.images] = train_batch
+					feed_dict[self.true_out] = train_label
+					feed_dict[self.train_mode] = False
 
-				if iteration%10 == 0:# and iteration != 0:
-					# training summaries
-					feed_dict = {self.images: train_batch,
-								 self.true_out: train_label,
-								 self.train_mode: False,
-								 self.learning_rate: learning_rate,
-								 self.learning_rate_fast: learning_rate_fast}
+					if self.network_type is self._ST_VGG:
+						feed_dict[self.gt_bounding_box] = train_bb
 
 					train_summary, train_acc, theta = self.sess.run(
 						[merged, accuracy, self.network.affine], feed_dict=feed_dict)
 
 					train_writer.add_summary(train_summary, iteration)
-					log.debug(theta[0])
-					log.debug(theta[1])
-					log.debug(theta[2])
 
+					if self.network_type is self._ST_VGG:
+						log.debug(theta[0])
+						log.debug(theta[1])
+						log.debug(theta[2])
 
 					# validation summaries
-					val_batch, val_label, _ = self.dataset.get_next_val_batch()
+					val_batch_return = self.dataset.get_next_val_batch()
+					if self.dataset_type is self._CUB:
+						val_batch, val_label, val_bb, _ = val_batch_return
+					else:
+						val_batch, val_label, _ = val_batch_return
 
-					# create validation feed dictionary
-					feed_dict = {self.images: val_batch,
-								 self.true_out: val_label,
-								 self.train_mode: False,
-								 self.learning_rate: learning_rate,
-								 self.learning_rate_fast: learning_rate_fast}
+					# update validation feed dictionary
+					feed_dict[self.images] = val_batch
+					feed_dict[self.true_out] = val_label
+					feed_dict[self.train_mode] = False
+
+					if self.network_type is self._ST_VGG:
+						feed_dict[self.gt_bounding_box] = val_bb
 
 					val_summary, val_acc = self.sess.run(
 						[merged, accuracy], feed_dict=feed_dict)
@@ -219,6 +300,19 @@ class Solver():
 
 					log.info('iteration {}. train accuracy: {:.3f} / val accuracy: {:.3f}'
 						.format(iteration, train_acc, val_acc))
+
+				################
+				# run train op #
+				################
+				# update train feed dictionary
+				feed_dict[self.images] = train_batch
+				feed_dict[self.true_out] = train_label
+				feed_dict[self.train_mode] = True
+
+				if self.network_type is self._ST_VGG:
+					feed_dict[self.gt_bounding_box] = train_bb
+
+				self.sess.run(train_op, feed_dict=feed_dict)
 
 				iteration +=1
 
@@ -239,6 +333,11 @@ class Solver():
 		val_writer.close()
 
 	def tester(self):
+		"""
+		Test on the testing dataset and get test accuracy / loss.
+		Cannot be called directly after self.trainer() function.
+		Must be used only after proper Solver class initialization.
+		"""
 		# variables
 		iteration = 0
 		is_last = False
@@ -258,21 +357,30 @@ class Solver():
 
 		while is_last is False:
 			# get next batch
-			batch, label, is_last = self.dataset.get_next_test_batch()
+			test_batch_return = self.dataset.get_next_test_batch()
+			if self.dataset_type is self._CUB:
+				batch, label, bb, is_last = test_batch_return
+			else:
+				batch, label, is_last = test_batch_return
 
 			# create feed dictionary
 			feed_dict = {self.images: batch,
 						 self.true_out: label,
 						 self.train_mode: False}
 
+			if self.network_type is self._ST_VGG:
+				feed_dict[self.gt_bounding_box] = bb
+
 			temp_accuracy, summary, theta = self.sess.run([accuracy, merged, self.network.affine], feed_dict=feed_dict)
 			sum_accuracy.append(temp_accuracy)
 
 			test_writer.add_summary(summary, iteration)
 			log.info('iteration {} accuracy: {}'.format(iteration, temp_accuracy))
-			log.debug(theta[0])
-			log.debug(theta[1])
-			log.debug(theta[2])
+
+			if self.network_type is self._ST_VGG:
+				log.debug(theta[0])
+				log.debug(theta[1])
+				log.debug(theta[2])
 
 			iteration +=1
 
@@ -282,6 +390,12 @@ class Solver():
 		log.info('final accuracy over the test set: {}'.format(np.mean(sum_accuracy)))
 
 	def predictor(self, image):
+		"""
+		Given an image, print its class from the imagenet 1000 classes.
+
+		Inputs:
+			- image: numpy formatted image to predict its class
+		"""
 		feed_dict={self.images: image, self.train_mode: False}
 		prob = self.sess.run(self.prob, feed_dict=feed_dict)
 		utils.print_prob(prob[0], './synset.txt')
@@ -289,9 +403,12 @@ class Solver():
 	def save_npy(self, save_path, scope=None):
 		"""
 		Save all network weights and biases of the current session to .npy format.
+		It assumes weights have string 'filters' inside their name, and
+		biases have string 'biases' inside their name.
 
 		Inputs:
 			- save_path: path for the .npy file to be saved to
+			- scope: scope from which to save weights and biases from (ex. 'classification')
 		"""
 		# some variables
 		data_dict = {}
