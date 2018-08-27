@@ -4,19 +4,23 @@
 !_TAG_PROGRAM_NAME	Universal Ctags	/Derived from Exuberant Ctags/
 !_TAG_PROGRAM_AUTHOR	Universal Ctags Team	//
 !_TAG_PROGRAM_URL	https://ctags.io/	/official site/
-_modify_bb	image_utils.py	/^def _modify_bb(crop_height, crop_width, ws, hs, bounding_box):$/;"	f
+_modify_crop_bb	image_utils.py	/^def _modify_crop_bb(crop_width, crop_height, ws, hs, bounding_box):$/;"	f
+_modify_crop_pl	image_utils.py	/^def _modify_crop_pl(crop_width, crop_height, ws, hs, part_locs):$/;"	f
 augment_image_batch	image_utils.py	/^def augment_image_batch($/;"	f
+bb_pixels_2_relative	image_utils.py	/^def bb_pixels_2_relative(bounding_boxes, width, height):$/;"	f
 centered_bgr_2_rgb	image_utils.py	/^def centered_bgr_2_rgb(centered_bgr, mean_rgb):$/;"	f
-central_crop	image_utils.py	/^def central_crop(input_img, crop_height, crop_width):$/;"	f
-central_crop_with_bb	image_utils.py	/^def central_crop_with_bb(input_img, crop_height, crop_width, bounding_box):$/;"	f
-draw_bounding_boxes	image_utils.py	/^def draw_bounding_boxes(images, bounding_boxes):$/;"	f
+central_crop	image_utils.py	/^def central_crop(input_img, crop_width, crop_height, bounding_box=None, part_locs=None):$/;"	f
+check_part_locs_boundary	image_utils.py	/^def check_part_locs_boundary(part_locs, crop_width, crop_height, part_key):$/;"	f
+draw_bounding_boxes	image_utils.py	/^def draw_bounding_boxes(images, bounding_boxes_list):$/;"	f
+extract_part_from_part_locs	image_utils.py	/^def extract_part_from_part_locs(part_locs, part_key):$/;"	f
 get_image_mean	image_utils.py	/^def get_image_mean(list_file, resize=None, isotropical=False):$/;"	f
 iaa	image_utils.py	/^from imgaug import augmenters as iaa$/;"	x
-isotropical_resize	image_utils.py	/^def isotropical_resize(input_img, base, upscale):$/;"	f
+isotropical_resize	image_utils.py	/^def isotropical_resize(input_img, base, upscale, bounding_box=None, part_locs=None):$/;"	f
 log	image_utils.py	/^import logging as log$/;"	I
 np	image_utils.py	/^import numpy as np$/;"	I
-random_crop	image_utils.py	/^def random_crop(input_img, crop_height, crop_width):$/;"	f
-random_crop_with_bb	image_utils.py	/^def random_crop_with_bb(input_img, crop_height, crop_width, bounding_box):$/;"	f
+pl_pixels_2_relative	image_utils.py	/^def pl_pixels_2_relative(part_locs, width, height):$/;"	f
+random_crop	image_utils.py	/^def random_crop(input_img, crop_width, crop_height, bounding_box=None, part_locs=None):$/;"	f
+resize_image	image_utils.py	/^def resize_image(input_img, shape, bounding_box=None, part_locs=None):$/;"	f
 rgb_2_centered_bgr	image_utils.py	/^def rgb_2_centered_bgr(rgb, mean_rgb):$/;"	f
 tf	image_utils.py	/^import tensorflow as tf$/;"	I
 DATA_TYPE_COMPCARS	main.py	/^DATA_TYPE_COMPCARS = 'compcars'$/;"	v
@@ -33,14 +37,23 @@ WEIGHTS_FOLDER	main.py	/^WEIGHTS_FOLDER = 'weights'$/;"	v
 WEIGHT_VGG16_IMAGENET	main.py	/^WEIGHT_VGG16_IMAGENET = 'vgg16.npy'$/;"	v
 WEIGHT_VGG19_IMAGENET	main.py	/^WEIGHT_VGG19_IMAGENET = 'vgg19.npy'$/;"	v
 log	main.py	/^import logging as log$/;"	I
+my_network_func	main.py	/^def my_network_func(mode='train'):$/;"	f
 np	main.py	/^import numpy as np$/;"	I
 plt	main.py	/^import matplotlib.pyplot as plt$/;"	I
 set_logging	main.py	/^def set_logging():$/;"	f
 st_vgg_func	main.py	/^def st_vgg_func(mode='train'):$/;"	f
 tf	main.py	/^import tensorflow as tf$/;"	I
 vgg_cub_ft_func	main.py	/^def vgg_cub_ft_func(mode='train'):$/;"	f
+MyNetwork	networks\\my_network.py	/^class MyNetwork:$/;"	c
+_OUT_SIZE	networks\\my_network.py	/^	_OUT_SIZE = (7, 7)$/;"	v	class:MyNetwork
+_RGB_MEAN	networks\\my_network.py	/^	_RGB_MEAN = [123.68, 116.779, 103.939]$/;"	v	class:MyNetwork
+__init__	networks\\my_network.py	/^	def __init__(self, num_classes=None, npy_path=None,$/;"	m	class:MyNetwork
+build	networks\\my_network.py	/^	def build(self, rgb, train_mode=None, **kwargs):$/;"	m	class:MyNetwork
+log	networks\\my_network.py	/^import logging as log$/;"	I
+np	networks\\my_network.py	/^import numpy as np$/;"	I
+tf	networks\\my_network.py	/^import tensorflow as tf$/;"	I
 NetworkCommon	networks\\network_common.py	/^class NetworkCommon:$/;"	c
-__init__	networks\\network_common.py	/^	def __init__(self, init_layers, npy_path, trainable):$/;"	m	class:NetworkCommon
+__init__	networks\\network_common.py	/^	def __init__(self, init_layers, npy_path, trainable, initializer=None, stddev=0.001):$/;"	m	class:NetworkCommon
 _get_conv_var	networks\\network_common.py	/^	def _get_conv_var(self, filter_size, in_channels, out_channels, name):$/;"	m	class:NetworkCommon
 _get_fc_var	networks\\network_common.py	/^	def _get_fc_var(self, in_size, out_size, init_weight, init_bias, name):$/;"	m	class:NetworkCommon
 _get_var	networks\\network_common.py	/^	def _get_var(self, initial_value, name, idx, var_name):$/;"	m	class:NetworkCommon
@@ -48,15 +61,13 @@ avg_pool	networks\\network_common.py	/^	def avg_pool(self, inputs, name):$/;"	m	
 conv_layer	networks\\network_common.py	/^	def conv_layer(self, inputs, filter_size, in_channels, out_channels, name, do_batch_norm=False)/;"	m	class:NetworkCommon
 dropout_layer	networks\\network_common.py	/^	def dropout_layer(self, inputs, dropout_rate, train_mode, name):$/;"	m	class:NetworkCommon
 entry_stop_gradients	networks\\network_common.py	/^	def entry_stop_gradients(self, target, mask):$/;"	m	class:NetworkCommon
-fc_layer	networks\\network_common.py	/^	def fc_layer(self, inputs, out_size, is_last, name, do_batch_norm=False, activation_fn=None, **/;"	m	class:NetworkCommon
+fc_layer	networks\\network_common.py	/^	def fc_layer(self, inputs, in_size, out_size, is_last, name, do_batch_norm=False, activation_fn/;"	m	class:NetworkCommon
 log	networks\\network_common.py	/^import logging as log$/;"	I
 max_pool	networks\\network_common.py	/^	def max_pool(self, inputs, name, stride=2):$/;"	m	class:NetworkCommon
 np	networks\\network_common.py	/^import numpy as np$/;"	I
 tf	networks\\network_common.py	/^import tensorflow as tf$/;"	I
 ST_VGG	networks\\st_vgg.py	/^class ST_VGG:$/;"	c
-__init__	networks\\st_vgg.py	/^	def __init__(self, num_classes=None, loc_vgg_npy_path=None, cls_vgg_npy_path=None,$/;"	m	class:ST_VGG
-batch_concat_scale_translate	networks\\st_vgg.py	/^			def batch_concat_scale_translate(x):$/;"	f	member:ST_VGG.build	file:
-batch_concat_translate	networks\\st_vgg.py	/^			def batch_concat_translate(x):$/;"	f	member:ST_VGG.build	file:
+__init__	networks\\st_vgg.py	/^	def __init__(self, num_classes=None, npy_path=None,$/;"	m	class:ST_VGG
 build	networks\\st_vgg.py	/^	def build(self, rgb, train_mode=None, **kwargs):$/;"	m	class:ST_VGG
 log	networks\\st_vgg.py	/^import logging as log$/;"	I
 np	networks\\st_vgg.py	/^import numpy as np$/;"	I
@@ -149,8 +160,15 @@ _interpolate	networks\\stn\\spatial_transformer.py	/^	def _interpolate(im, x, y,
 _meshgrid	networks\\stn\\spatial_transformer.py	/^	def _meshgrid(height, width):$/;"	f	function:transformer	file:
 _repeat	networks\\stn\\spatial_transformer.py	/^	def _repeat(x, n_repeats):$/;"	f	function:transformer	file:
 _transform	networks\\stn\\spatial_transformer.py	/^	def _transform(theta, input_dim, out_size):$/;"	f	function:transformer	file:
+abs_pl_2_bb	networks\\stn\\spatial_transformer.py	/^def abs_pl_2_bb(bounding_boxes, abs_pl):$/;"	f
 batch_transformer	networks\\stn\\spatial_transformer.py	/^def batch_transformer(U, thetas, out_size, name='BatchSpatialTransformer'):$/;"	f
+bb_2_transcale	networks\\stn\\spatial_transformer.py	/^def bb_2_transcale(bounding_boxes):$/;"	f
+clip_transcale	networks\\stn\\spatial_transformer.py	/^def clip_transcale(ts_matrix):$/;"	f
+rel_trans_2_abs_pl	networks\\stn\\spatial_transformer.py	/^def rel_trans_2_abs_pl(bounding_boxes, t_matrix):$/;"	f
 tf	networks\\stn\\spatial_transformer.py	/^import tensorflow as tf$/;"	I
+trans_2_affine	networks\\stn\\spatial_transformer.py	/^def trans_2_affine(elems):$/;"	f
+transcale_2_affine	networks\\stn\\spatial_transformer.py	/^def transcale_2_affine(ts_matrix):$/;"	f
+transcale_2_bb	networks\\stn\\spatial_transformer.py	/^def transcale_2_bb(ts_matrix):$/;"	f
 transformer	networks\\stn\\spatial_transformer.py	/^def transformer(U, theta, out_size, name='SpatialTransformer', **kwargs):$/;"	f
 bias_variable	networks\\stn\\tf_utils.py	/^def bias_variable(shape):$/;"	f
 conv2d	networks\\stn\\tf_utils.py	/^def conv2d(x, n_filters,$/;"	f
@@ -161,15 +179,15 @@ tf	networks\\stn\\tf_utils.py	/^import tensorflow as tf$/;"	I
 weight_variable	networks\\stn\\tf_utils.py	/^def weight_variable(shape):$/;"	f
 VGG16	networks\\vgg16.py	/^class VGG16:$/;"	c
 _VGG_RGB_MEAN	networks\\vgg16.py	/^	_VGG_RGB_MEAN = [123.68, 116.779, 103.939]$/;"	v	class:VGG16
-__init__	networks\\vgg16.py	/^	def __init__(self, num_classes=None, vgg16_npy_path=None,$/;"	m	class:VGG16
+__init__	networks\\vgg16.py	/^	def __init__(self, num_classes=None, npy_path=None,$/;"	m	class:VGG16
 build	networks\\vgg16.py	/^	def build(self, rgb, train_mode=None):$/;"	m	class:VGG16
-build_partial	networks\\vgg16.py	/^	def build_partial(self, rgb, build_until, train_mode=None):$/;"	m	class:VGG16
+build_partial	networks\\vgg16.py	/^	def build_partial(self, rgb, build_until, return_intermediates=None, train_mode=None):$/;"	m	class:VGG16
 log	networks\\vgg16.py	/^import logging as log$/;"	I
 np	networks\\vgg16.py	/^import numpy as np$/;"	I
 tf	networks\\vgg16.py	/^import tensorflow as tf$/;"	I
 VGG19	networks\\vgg19.py	/^class VGG19:$/;"	c
 _VGG_RGB_MEAN	networks\\vgg19.py	/^	_VGG_RGB_MEAN = [123.68, 116.779, 103.939]$/;"	v	class:VGG19
-__init__	networks\\vgg19.py	/^	def __init__(self, num_classes=None, vgg19_npy_path=None,$/;"	m	class:VGG19
+__init__	networks\\vgg19.py	/^	def __init__(self, num_classes=None, npy_path=None,$/;"	m	class:VGG19
 build	networks\\vgg19.py	/^	def build(self, rgb, train_mode=None):$/;"	m	class:VGG19
 build_partial	networks\\vgg19.py	/^	def build_partial(self, rgb, build_until, train_mode=None):$/;"	m	class:VGG19
 log	networks\\vgg19.py	/^import logging as log$/;"	I
@@ -186,30 +204,32 @@ _NUM_TEST_IMGS	parsedata\\parse_cub.py	/^	_NUM_TEST_IMGS = _NUM_TOTAL_IMGS - _NU
 _NUM_TOTAL_IMGS	parsedata\\parse_cub.py	/^	_NUM_TOTAL_IMGS = 11788$/;"	v	class:ParseCub
 _NUM_TRAIN_IMGS	parsedata\\parse_cub.py	/^	_NUM_TRAIN_IMGS = 8251$/;"	v	class:ParseCub
 _NUM_VAL_IMGS	parsedata\\parse_cub.py	/^	_NUM_VAL_IMGS = 1768$/;"	v	class:ParseCub
+_PARTS_LOCS_TXT	parsedata\\parse_cub.py	/^	_PARTS_LOCS_TXT = 'parts\\\\part_locs.txt'$/;"	v	class:ParseCub
 _TEST_LIST	parsedata\\parse_cub.py	/^	_TEST_LIST = 'test_list.txt'$/;"	v	class:ParseCub
 _TRAIN_LIST	parsedata\\parse_cub.py	/^	_TRAIN_LIST = 'train_list.txt'$/;"	v	class:ParseCub
 _VAL_LIST	parsedata\\parse_cub.py	/^	_VAL_LIST = 'val_list.txt'$/;"	v	class:ParseCub
 __init__	parsedata\\parse_cub.py	/^	def __init__(self, dataset_dir, resize, crop_shape, batch_size, isotropical=False, initial_load/;"	m	class:ParseCub
 _file_list_2_bb	parsedata\\parse_cub.py	/^	def _file_list_2_bb(self):$/;"	m	class:ParseCub
-_fill_bb_list	parsedata\\parse_cub.py	/^			def _fill_bb_list(file_list, bb_list):$/;"	f	member:ParseCub._file_list_2_bb	file:
+_file_list_2_part_locs	parsedata\\parse_cub.py	/^	def _file_list_2_part_locs(self):$/;"	m	class:ParseCub
+_fill_bb_list	parsedata\\parse_cub.py	/^			def _fill_bb_list(id_list, bb_list):$/;"	f	member:ParseCub._file_list_2_bb	file:
+_fill_pl_list	parsedata\\parse_cub.py	/^			def _fill_pl_list(id_list, pl_list):$/;"	f	member:ParseCub._file_list_2_part_locs	file:
 _load_list	parsedata\\parse_cub.py	/^	def _load_list(self):$/;"	m	class:ParseCub
 _make_list	parsedata\\parse_cub.py	/^	def _make_list(self):$/;"	m	class:ParseCub
-_test_batch_idx	parsedata\\parse_cub.py	/^	_test_batch_idx = None$/;"	v	class:ParseCub
-_test_file_list	parsedata\\parse_cub.py	/^	_test_file_list = None$/;"	v	class:ParseCub
-_test_label_list	parsedata\\parse_cub.py	/^	_test_label_list = None$/;"	v	class:ParseCub
-_train_batch_idx	parsedata\\parse_cub.py	/^	_train_batch_idx = None$/;"	v	class:ParseCub
-_train_file_list	parsedata\\parse_cub.py	/^	_train_file_list = None$/;"	v	class:ParseCub
-_train_label_list	parsedata\\parse_cub.py	/^	_train_label_list = None$/;"	v	class:ParseCub
-_val_batch_idx	parsedata\\parse_cub.py	/^	_val_batch_idx = None$/;"	v	class:ParseCub
+_update_head_2_pl_list	parsedata\\parse_cub.py	/^		def _update_head_2_pl_list(pl_list):$/;"	f	member:ParseCub._update_part_locs	file:
+_update_part_locs	parsedata\\parse_cub.py	/^	def _update_part_locs(self):$/;"	m	class:ParseCub
 get_next_test_batch	parsedata\\parse_cub.py	/^	def get_next_test_batch(self):$/;"	m	class:ParseCub
 get_next_train_batch	parsedata\\parse_cub.py	/^	def get_next_train_batch(self, augment=True):$/;"	m	class:ParseCub
 get_next_val_batch	parsedata\\parse_cub.py	/^	def get_next_val_batch(self):$/;"	m	class:ParseCub
 get_num_classes	parsedata\\parse_cub.py	/^	def get_num_classes(self):$/;"	m	class:ParseCub
 log	parsedata\\parse_cub.py	/^import logging as log$/;"	I
 np	parsedata\\parse_cub.py	/^import numpy as np$/;"	I
+patches	parsedata\\parse_cub.py	/^import matplotlib.patches as patches$/;"	I
+plt	parsedata\\parse_cub.py	/^import matplotlib.pyplot as plt$/;"	I
 tf	parsedata\\parse_cub.py	/^import tensorflow as tf$/;"	I
 Solver	solver.py	/^class Solver():$/;"	c
 _BATCH_SIZE	solver.py	/^	_BATCH_SIZE = 32$/;"	v	class:Solver
+_CUB	solver.py	/^	_CUB = 'cub'$/;"	v	class:Solver
+_MY_NETWORK	solver.py	/^	_MY_NETWORK = 'my_network'$/;"	v	class:Solver
 _ST_VGG	solver.py	/^	_ST_VGG = 'st_vgg'$/;"	v	class:Solver
 _TEST_LOG_FOLDER	solver.py	/^	_TEST_LOG_FOLDER = 'test'$/;"	v	class:Solver
 _TRAIN_LOG_FOLDER	solver.py	/^	_TRAIN_LOG_FOLDER = 'train'$/;"	v	class:Solver

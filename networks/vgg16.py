@@ -12,7 +12,7 @@ class VGG16:
 
 	_VGG_RGB_MEAN = [123.68, 116.779, 103.939]
 
-	def __init__(self, num_classes=None, vgg16_npy_path=None,
+	def __init__(self, num_classes=None, npy_path=None,
 			init_layers=None, trainable=True, dropout_rate=0.5):
 		"""
 		VGG-16 class constructor.
@@ -20,7 +20,7 @@ class VGG16:
 		Inputs:
 			- num_classes: number of classes to set the final FC layer output size.
 				note that this could be left to None if using only partial VGG net
-			- vgg16_npy_path: path of the vgg16 pre-trained weights in .npy format
+			- npy_path: path of the vgg16 pre-trained weights in .npy format
 			- init_layers: force the specified layers in this python list to
 				truncated_normal instead of loading from the data_dict
 			- trainable: boolean. True if tf.Variable False if tf.constant
@@ -28,7 +28,7 @@ class VGG16:
 		"""
 		self.num_classes = num_classes
 		self.dropout_rate = dropout_rate
-		self.nc = NetworkCommon(init_layers, vgg16_npy_path, trainable)
+		self.nc = NetworkCommon(init_layers, npy_path, trainable)
 
 	def build(self, rgb, train_mode=None):
 		"""
@@ -55,7 +55,7 @@ class VGG16:
 
 		return fc8, prob
 
-	def build_partial(self, rgb, build_until, train_mode=None):
+	def build_partial(self, rgb, build_until, return_intermediates=None, train_mode=None):
 		"""
 		Build partial VGG-16 network.
 		For example, one can call this to build a VGG-16 without FC layers.
@@ -119,17 +119,17 @@ class VGG16:
 		if build_until is 'pool5': return pool5
 
 		# fc layers
-		fc6 = self.nc.fc_layer(pool5, 4096, False, 'fc6')
+		fc6 = self.nc.fc_layer(pool5, 25088, 4096, False, 'fc6')
 		if build_until is 'fc6': return fc6
 		dropout6 = self.nc.dropout_layer(fc6, self.dropout_rate, train_mode, 'dropout6')
 		if build_until is 'dropout6': return dropout6
 
-		fc7 = self.nc.fc_layer(dropout6, 4096, False, 'fc7')
+		fc7 = self.nc.fc_layer(dropout6, 4096, 4096, False, 'fc7')
 		if build_until is 'fc7': return fc7
 		dropout7 = self.nc.dropout_layer(fc7, self.dropout_rate, train_mode, 'dropout7')
 		if build_until is 'dropout7': return dropout7
 
-		fc8 = self.nc.fc_layer(dropout7, self.num_classes, True, 'fc8')
+		fc8 = self.nc.fc_layer(dropout7, 4096, self.num_classes, True, 'fc8')
 		if build_until is 'fc8': return fc8
 
 		raise RuntimeError('Matching keyword not found for partial VGG-16 model build!')

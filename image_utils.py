@@ -56,7 +56,7 @@ def get_image_mean(list_file, resize=None, isotropical=False):
 
 	return mean
 
-def isotropical_resize(input_img, base, upscale, bounding_box=None):
+def isotropical_resize(input_img, base, upscale, bounding_box=None, part_locs=None):
 	"""
 	Resize the input_img isotropically by setting the smaller side
 	of the image to the number of pixels given by base.
@@ -68,10 +68,12 @@ def isotropical_resize(input_img, base, upscale, bounding_box=None):
 		- base: base to isotropically resize the input_img
 		- upscale: bool. True if wish to perform upscaling
 		- bounding_box: (optional) bounding box info in tuple format(x, y, w, h)
+		- part_locs: (optional) part locations info in dictionary format
 
 	Retruns:
 		- output: isotropically resized output image of PIL Image format
-		- modified_bb: modified bounding box in tuple format (x, y, w, h)
+		- modified_bb: (optional) modified bounding box in tuple format (x, y, w, h)
+		- modified_pl: (optional) modified part locations in dictionary format
 	"""
 	# variables
 	width, height = input_img.size
@@ -91,14 +93,28 @@ def isotropical_resize(input_img, base, upscale, bounding_box=None):
 		width_new = int((float(width) * float(percent)))
 		output = input_img.resize((width_new, base), Image.ANTIALIAS)
 
-	# if bouding box was also fed in, modify it and return it
+	# modify bouding box if needed
 	if bounding_box is not None:
 		modified_bb = tuple([percent*x for x in bounding_box])
-		return output, modified_bb
-	else:
-		return ouput
 
-def resize_image(input_img, shape, bounding_box=None):
+	# modify part locations if needed
+	if part_locs is not None:
+		modified_pl = {}
+		for key, value in part_locs.items():
+			x, y = value
+			modified_pl[key] = (percent*x, percent*y)
+
+	# return accordingly
+	if bounding_box is not None and part_locs is not None:
+		return output, modified_bb, modified_pl
+	elif bounding_box is not None:
+		return output, modified_bb
+	elif part_locs is not None:
+		return output, modified_pl
+	else:
+		return output
+
+def resize_image(input_img, shape, bounding_box=None, part_locs=None):
 	"""
 	Resize the input_image to the given shape.
 	For isotropical resizing, please refer to isotropical_resize().
@@ -107,20 +123,22 @@ def resize_image(input_img, shape, bounding_box=None):
 		- input_img: input image of PIL Image format
 		- shape: python tuple format denoting the resize shape (w, h)
 		- bounding_box: (optional) bounding box info in tuple format(x, y, w, h)
+		- part_locs: (optional) part locations info in dictionary format
 
 	Returns:
 		- output: resized output image of PIL Image format
-		- modified_bb: modified bounding box in tuple format (x, y, w, h)
+		- modified_bb: (optional) modified bounding box in tuple format (x, y, w, h)
+		- modified_pl: (optional) modified part locations in dictionary format
 	"""
 	output = input_img.resize(shape, resample=Image.ANTIALIAS)
 
-	# if bouding box was also fed in, modify it and return it
-	if bounding_box is not None:
-		width, height = input_img.size
-		x, y, w, h = bounding_box
+	width, height = input_img.size
+	x_percent = shape[0] / float(width)
+	y_percent = shape[1] / float(height)
 
-		x_percent = shape[0] / float(width)
-		y_percent = shape[1] / float(height)
+	# modify bouding box if needed
+	if bounding_box is not None:
+		x, y, w, h = bounding_box
 
 		x *= x_percent
 		w *= x_percent
@@ -129,7 +147,20 @@ def resize_image(input_img, shape, bounding_box=None):
 
 		modified_bb = (x, y, w, h)
 
+	# modify part locations if needed
+	if part_locs is not None:
+		modified_pl = {}
+		for key, value in part_locs.items():
+			x, y = value
+			modified_pl[key] = (x_percent*x, y_percent*y)
+
+	# return accordingly
+	if bounding_box is not None and part_locs is not None:
+		return output, modified_bb, modified_pl
+	elif bounding_box is not None:
 		return output, modified_bb
+	elif part_locs is not None:
+		return output, modified_pl
 	else:
 		return output
 
@@ -171,7 +202,29 @@ def _modify_crop_bb(crop_width, crop_height, ws, hs, bounding_box):
 
 	return (x_mod, y_mod, w, h)
 
-def random_crop(input_img, crop_width, crop_height, bounding_box=None):
+def _modify_crop_pl(crop_width, crop_height, ws, hs, part_locs):
+	"""
+	(private) Modify the part locations according to the cropping info.
+
+	Inputs:
+		- crop_width: width of the cropped image
+		- crop_height: height of the cropped image
+		- ws: starting point of the width in the cropped image (pixels)
+		- hs: starting point of the height in the cropped image (pixels)
+		- part_locs: part locations info in dictionary format
+
+	Returns:
+		- dictionary of the modified part locations
+	"""
+	modified_pl = {}
+
+	for key, value in part_locs.items():
+		x, y = value
+		modified_pl[key] = (x-ws, y-hs)
+
+	return modified_pl
+
+def random_crop(input_img, crop_width, crop_height, bounding_box=None, part_locs=None):
 	"""
 	Randomly crop the input_img to specified size.
 	Adjust the bounding box according to the cropped image if specified.
@@ -181,10 +234,12 @@ def random_crop(input_img, crop_width, crop_height, bounding_box=None):
 		- crop_width: width of the desired crop size
 		- crop_height: height of the desired crop size
 		- bounding_box: (optional) bounding box info in tuple format(x, y, w, h)
+		- part_locs: (optional) part locations info in dictionary format
 
 	Returns:
 		- cropped_img: cropped output image of PIL Image format
-		- modified_bb: modified bounding box in tuple format (x, y, w, h)
+		- modified_bb: (optional) modified bounding box in tuple format (x, y, w, h)
+		- modified_pl: (optional) modified part locations in dictionary format
 	"""
 	input_width, input_height = input_img.size
 
@@ -195,14 +250,25 @@ def random_crop(input_img, crop_width, crop_height, bounding_box=None):
 	# crop image
 	cropped_img = input_img.crop((ws, hs, ws+crop_width, hs+crop_height))
 
-	# modify bounding box if specified
+	# modify bouding box if needed
 	if bounding_box is not None:
 		modified_bb = _modify_crop_bb(crop_width, crop_height, ws, hs, bounding_box)
+
+	# modify part locations if needed
+	if part_locs is not None:
+		modified_pl = _modify_crop_pl(crop_width, crop_height, ws, hs, part_locs)
+
+	# return accordingly
+	if bounding_box is not None and part_locs is not None:
+		return cropped_img, modified_bb, modified_pl
+	elif bounding_box is not None:
 		return cropped_img, modified_bb
+	elif part_locs is not None:
+		return cropped_img, modified_pl
 	else:
 		return cropped_img
 
-def central_crop(input_img, crop_width, crop_height, bounding_box=None):
+def central_crop(input_img, crop_width, crop_height, bounding_box=None, part_locs=None):
 	"""
 	Central crop the input_img to specified size.
 	Adjust the bounding box according to the cropped image if specified.
@@ -212,10 +278,12 @@ def central_crop(input_img, crop_width, crop_height, bounding_box=None):
 		- crop_width: width of the desired crop size
 		- crop_height: height of the desired crop size
 		- bounding_box: (optional) bounding box info in tuple format(x, y, w, h)
+		- part_locs: (optional) part locations info in dictionary format
 
 	Returns:
 		- cropped_img: cropped output image of PIL Image format
-		- modified_bb: modified bounding box in tuple format (x, y, w, h)
+		- modified_bb: (optional) modified bounding box in tuple format (x, y, w, h)
+		- modified_pl: (optional) modified part locations in dictionary format
 	"""
 	input_width, input_height = input_img.size
 
@@ -226,10 +294,21 @@ def central_crop(input_img, crop_width, crop_height, bounding_box=None):
 	# crop image
 	cropped_img = input_img.crop((ws, hs, ws+crop_width, hs+crop_height))
 
-	# modify bounding box if specified
+	# modify bouding box if needed
 	if bounding_box is not None:
 		modified_bb = _modify_crop_bb(crop_width, crop_height, ws, hs, bounding_box)
+
+	# modify part locations if needed
+	if part_locs is not None:
+		modified_pl = _modify_crop_pl(crop_width, crop_height, ws, hs, part_locs)
+
+	# return accordingly
+	if bounding_box is not None and part_locs is not None:
+		return cropped_img, modified_bb, modified_pl
+	elif bounding_box is not None:
 		return cropped_img, modified_bb
+	elif part_locs is not None:
+		return cropped_img, modified_pl
 	else:
 		return cropped_img
 
@@ -240,7 +319,8 @@ def augment_image_batch(
 		agn=None,
 		coarse_dropout=None,
 		coarse_sp=None,
-		bounding_box=None):
+		bounding_box=None,
+		part_locs=None):
 	"""
 	Augment image batch using imgaug.
 	(https://github.com/aleju/imgaug)
@@ -254,10 +334,12 @@ def augment_image_batch(
 		- coarse_dropout: add coarse dropout by certain fraction of pixels to zero (ex. 0.2)
 		- coarse_sp: add coarse salt & pepper noise (ex. 0.2)
 		- bounding_box: (optional) bounding box info in tuple format(x, y, w, h)
+		- part_locs: (optional) part locations info in numpy array of dictionaries
 
 	Returns:
 		- output: augmented image in numpy data type
-		- bounding_box: modified bounding box
+		- bounding_box: (optional) modified bounding box
+		- part_locs: (optional) modified part locations info in numpy array of dictionaries
 	"""
 	augment_list = []
 
@@ -277,6 +359,14 @@ def augment_image_batch(
 					x = width - x - w
 
 					bounding_box[i] = (x, y, w, h)
+
+				if part_locs is not None:
+					for key, value in part_locs[i].items():
+						x, y = value
+						width = input_batch[i].shape[0]
+						x = width - x
+
+						part_locs[i][key] = (x, y)
 
 	# do rest of the augmentation
 	if add is not None:
@@ -298,8 +388,12 @@ def augment_image_batch(
 
 	output = aug.augment_images(input_batch)
 
-	if bounding_box is not None:
+	if bounding_box is not None and part_locs is not None:
+		return output, bounding_box, part_locs
+	elif bounding_box is not None:
 		return output, bounding_box
+	elif part_locs is not None:
+		return output, part_locs
 	else:
 		return output
 
@@ -397,7 +491,7 @@ def bb_pixels_2_relative(bounding_boxes, width, height):
 		- height: height of the image
 
 	Returns:
-		relative_bb: numpy array same as bounding_boxes format
+		- relative_bb: numpy array same as bounding_boxes format
 			containing the bounding box info in relative coordinates
 	"""
 	batch_size = bounding_boxes.shape[0]
@@ -412,3 +506,89 @@ def bb_pixels_2_relative(bounding_boxes, width, height):
 		relative_bb[i] = (x, y, w, h)
 
 	return relative_bb
+
+def pl_pixels_2_relative(part_locs, width, height):
+	"""
+	Convert part locations information in pixels to values
+	relative to width and height of the image.
+
+	Inputs:
+		- part_locs: numpy array containing batches of
+			dictionaries containing part locations info in pixels
+		- width: width of the image
+		- height: height of the image
+
+	Returns:
+		- relative_pl: numpy array same as part_locs format
+			containing the bounding box info in relative coordinates
+	"""
+	batch_size = part_locs.shape[0]
+	relative_pl = np.empty_like(part_locs)
+
+	for i in range(batch_size):
+		dictionary = {}
+		for key, value in part_locs[i].items():
+			x, y = value
+			x /= float(width)
+			y /= float(height)
+			dictionary[key] = (x, y)
+		relative_pl[i] = dictionary
+
+	return relative_pl
+
+def check_part_locs_boundary(part_locs, crop_width, crop_height, part_key):
+	"""
+	Check if specified part_key locations in the part_locs numpy array
+	is outside the boundary of the image size. For example, if specified
+	part_key is a negative value, or larger than crop_width or crop_height,
+	function returns True denoting part is out of boundary.
+
+	Inputs:
+		- part_locs: numpy array containing batches of
+			dictionaries containing part locations info
+		- crop_width: image width upper bound
+		- crop_height: image height upper bound
+		- part_key: string denoting specific part to check for (ex. 'head')
+
+	Returns:
+		- out_of_bounds: True if out of bound, False if not
+	"""
+	out_of_bounds = False
+
+	for key, value in part_locs.items():
+		if key is part_key:
+			x, y = value
+			if x < 0 or y < 0:
+				out_of_bounds = True
+
+			if x > crop_width or y > crop_height:
+				out_of_bounds = True
+
+	return out_of_bounds
+
+def extract_part_from_part_locs(part_locs, part_key):
+	"""
+	Extract specified 'part_key' from dictionary containing
+	multiple part locatioins.
+
+	Inputs:
+		- part_locs: numpy array containing batches of
+			dictionaries containing part locations info
+		- part_key: string denoting specific part location (ex. 'head')
+
+	Returns:
+		- part_loc: numpy array containing extracted single
+			part location, where each row is a tuple (x, y)
+	"""
+	batch_size = part_locs.shape[0]
+	part_loc = np.empty(batch_size, dtype=(np.float32, 2))
+
+	for i in range(batch_size):
+		for key, value in part_locs[i].items():
+			if key is part_key:
+				x, y = value
+				break
+
+		part_loc[i] = (x, y)
+
+	return part_loc

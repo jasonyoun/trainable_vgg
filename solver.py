@@ -8,6 +8,7 @@ from parsedata.parse_cub import ParseCub
 from networks.vgg16 import VGG16
 from networks.vgg19 import VGG19
 from networks.st_vgg import ST_VGG
+from networks.my_network import MyNetwork
 from functools import reduce
 import utils
 
@@ -23,6 +24,7 @@ class Solver():
 	_VGG16 = 'vgg16'
 	_VGG19 = 'vgg19'
 	_ST_VGG = 'st_vgg'
+	_MY_NETWORK = 'my_network'
 
 	# other variables
 	_BATCH_SIZE = 32
@@ -53,10 +55,15 @@ class Solver():
 			- log_dir: parent directory where the log should be dumped to
 			- weights_path: if loading the network with pre-trained weights,
 				specify its path here. if using more than two paths,
-				use python list to feed in multiple paths
+				use python dictionary to feed in multiple paths where
+				key is variable scope used for each network
+				(ex. {'localization': path, 'classification': path})
 			- init_layers: if performing fine-tuning and need to random
 				init some layers, specify them here in python list format
-				containing variables to initialize in string format
+				containing variables to initialize in string format.
+				if the network has multiple scopes, use python dictionary
+				format where key is variable scope and value is dictionary
+				(ex. {'localization': [], 'classification': []})
 		"""
 
 		self.sess = sess
@@ -75,18 +82,23 @@ class Solver():
 		if self.network_type is self._VGG16:
 			self.network = VGG16(
 				num_classes=self.dataset.get_num_classes(),
-				vgg16_npy_path=weights_path,
+				npy_path=weights_path,
 				init_layers=init_layers)
 		elif self.network_type is self._VGG19:
 			self.network = VGG19(
 				num_classes=self.dataset.get_num_classes(),
-				vgg19_npy_path=weights_path,
+				npy_path=weights_path,
 				init_layers=init_layers)
 		elif self.network_type is self._ST_VGG:
 			self.network = ST_VGG(
 				num_classes=self.dataset.get_num_classes(),
-				loc_vgg_npy_path=weights_path[0],
-				cls_vgg_npy_path=weights_path[1])
+				npy_path=weights_path,
+				init_layers=init_layers)
+		elif self.network_type is self._MY_NETWORK:
+			self.network = MyNetwork(
+				num_classes=self.dataset.get_num_classes(),
+				npy_path=weights_path,
+				init_layers=init_layers)
 
 		self.train_log_path = os.path.join(log_dir, self._TRAIN_LOG_FOLDER)
 		self.val_log_path = os.path.join(log_dir, self._VAL_LOG_FOLDER)
@@ -99,13 +111,18 @@ class Solver():
 		self.learning_rate = tf.placeholder(tf.float32)
 		self.learning_rate_fast = tf.placeholder(tf.float32)
 
-		if self.network_type is self._ST_VGG:
+		if self.network_type is self._ST_VGG or self.network_type is self._MY_NETWORK:
 			self.gt_bounding_box = tf.placeholder(tf.float32, (None, 4))
+			self.gt_part_loc_head = tf.placeholder(tf.float32, (None, 2))
+			# self.gt_part_loc_body = tf.placeholder(tf.float32, (None, 2))
 
 		# build the network
-		if self.network_type is self._ST_VGG:
-			self.logits, self.prob, self.pred_bounding_box = self.network.build(
-				self.images, self.train_mode, gt_bounding_box=self.gt_bounding_box)
+		if self.network_type is self._ST_VGG or self.network_type is self._MY_NETWORK:
+			build_result = self.network.build(
+				self.images, self.train_mode, gt_bounding_box=self.gt_bounding_box,
+				gt_part_loc_head=self.gt_part_loc_head)#, gt_part_loc_body=self.gt_part_loc_body)
+
+			self.logits, self.prob, self.pred_bounding_box, self.pred_head_bb = build_result
 		else:
 			self.logits, self.prob = self.network.build(
 				self.images, self.train_mode)
@@ -171,8 +188,10 @@ class Solver():
 			mean_loss = mean_loss + loss_L2
 
 		# if training st_vgg network, we also add L2 distance loss for bounding box
-		if self.network_type is self._ST_VGG:
+		if self.network_type is self._ST_VGG or self.network_type is self._MY_NETWORK:
 			mean_loss += tf.nn.l2_loss(self.pred_bounding_box - self.gt_bounding_box)
+			mean_loss += tf.nn.l2_loss(self.pred_head_bb - self.gt_part_loc_head)
+			# mean_loss += tf.nn.l2_loss(self.pred_body_bb - self.gt_part_loc_body)
 
 		tf.summary.scalar('mean_loss', mean_loss)
 
@@ -234,19 +253,23 @@ class Solver():
 			log.info('Current epoch: {}'.format(e))
 
 			# weight decay if necessary
-			if e is 100:
-			 	learning_rate_fast /= 10
-			 	learning_rate /= 10
+			if e is 50:
+				learning_rate_fast /= 2
+				# learning_rate /= 2
 
-			# if e is 70:
-			#  	learning_rate_fast /= 2
-			#  	learning_rate /= 2
+			if e is 100:
+			 	learning_rate_fast /= 2
+				# learning_rate /= 2
+
+			if e is 150:
+			 	learning_rate_fast /= 2
+				# learning_rate /= 2
 
 			while is_last is False:
 				# get next train batch
 				train_batch_return = self.dataset.get_next_train_batch(augment=True)
 				if self.dataset_type is self._CUB:
-					train_batch, train_label, train_bb, is_last = train_batch_return
+					train_batch, train_label, train_bb, train_hl, is_last = train_batch_return
 				else:
 					train_batch, train_label, is_last = train_batch_return
 
@@ -265,23 +288,20 @@ class Solver():
 					feed_dict[self.true_out] = train_label
 					feed_dict[self.train_mode] = False
 
-					if self.network_type is self._ST_VGG:
+					if self.network_type is self._ST_VGG or self.network_type is self._MY_NETWORK:
 						feed_dict[self.gt_bounding_box] = train_bb
+						feed_dict[self.gt_part_loc_head] = train_hl
+						# feed_dict[self.gt_part_loc_body] = train_bl
 
-					train_summary, train_acc, theta = self.sess.run(
-						[merged, accuracy, self.network.affine], feed_dict=feed_dict)
+					train_summary, train_acc = self.sess.run(
+						[merged, accuracy], feed_dict=feed_dict)
 
 					train_writer.add_summary(train_summary, iteration)
-
-					if self.network_type is self._ST_VGG:
-						log.debug(theta[0])
-						log.debug(theta[1])
-						log.debug(theta[2])
 
 					# validation summaries
 					val_batch_return = self.dataset.get_next_val_batch()
 					if self.dataset_type is self._CUB:
-						val_batch, val_label, val_bb, _ = val_batch_return
+						val_batch, val_label, val_bb, val_hl, _ = val_batch_return
 					else:
 						val_batch, val_label, _ = val_batch_return
 
@@ -290,8 +310,10 @@ class Solver():
 					feed_dict[self.true_out] = val_label
 					feed_dict[self.train_mode] = False
 
-					if self.network_type is self._ST_VGG:
+					if self.network_type is self._ST_VGG or self.network_type is self._MY_NETWORK:
 						feed_dict[self.gt_bounding_box] = val_bb
+						feed_dict[self.gt_part_loc_head] = val_hl
+						# feed_dict[self.gt_part_loc_body] = val_bl
 
 					val_summary, val_acc = self.sess.run(
 						[merged, accuracy], feed_dict=feed_dict)
@@ -309,8 +331,10 @@ class Solver():
 				feed_dict[self.true_out] = train_label
 				feed_dict[self.train_mode] = True
 
-				if self.network_type is self._ST_VGG:
+				if self.network_type is self._ST_VGG or self.network_type is self._MY_NETWORK:
 					feed_dict[self.gt_bounding_box] = train_bb
+					feed_dict[self.gt_part_loc_head] = train_hl
+					# feed_dict[self.gt_part_loc_body] = train_bl
 
 				self.sess.run(train_op, feed_dict=feed_dict)
 
@@ -359,7 +383,7 @@ class Solver():
 			# get next batch
 			test_batch_return = self.dataset.get_next_test_batch()
 			if self.dataset_type is self._CUB:
-				batch, label, bb, is_last = test_batch_return
+				batch, label, bb, hl, is_last = test_batch_return
 			else:
 				batch, label, is_last = test_batch_return
 
@@ -368,19 +392,21 @@ class Solver():
 						 self.true_out: label,
 						 self.train_mode: False}
 
-			if self.network_type is self._ST_VGG:
+			if self.network_type is self._ST_VGG or self.network_type is self._MY_NETWORK:
 				feed_dict[self.gt_bounding_box] = bb
+				feed_dict[self.gt_part_loc_head] = hl
+				# feed_dict[self.gt_part_loc_body] = bl
 
-			temp_accuracy, summary, theta = self.sess.run([accuracy, merged, self.network.affine], feed_dict=feed_dict)
+			temp_accuracy, summary = self.sess.run([accuracy, merged], feed_dict=feed_dict)
 			sum_accuracy.append(temp_accuracy)
 
 			test_writer.add_summary(summary, iteration)
 			log.info('iteration {} accuracy: {}'.format(iteration, temp_accuracy))
 
-			if self.network_type is self._ST_VGG:
-				log.debug(theta[0])
-				log.debug(theta[1])
-				log.debug(theta[2])
+			# if self.network_type is self._ST_VGG or self.network_type is self._MY_NETWORK:
+			# 	log.debug(theta[0])
+			# 	log.debug(theta[1])
+			# 	log.debug(theta[2])
 
 			iteration +=1
 
@@ -416,7 +442,7 @@ class Solver():
 		log.info("start saving npy to {}".format(save_path))
 
 		for tensor in tf.get_collection(tf.GraphKeys.TRAINABLE_VARIABLES, scope=scope):
-			log.debug('tensor name: {}'.format(tensor.name))
+			log.debug('tensor name: {}, shape: {}'.format(tensor.name, tensor.shape))
 
 			split_name = re.split('/|:', tensor.name)
 

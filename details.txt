@@ -1,7 +1,7 @@
 """
 vgg16_cub_ft.npy
 
-accuracy: 0.7563561797142029
+99: 0.7523818612098694
 
 vgg16
 
@@ -19,17 +19,18 @@ if e is 60:
  	learning_rate /= 2
 """
 
-accuracy: @ epoch60: 0.731176495552063
 
-if e is 30:
-	learning_rate_fast /= 10
- 	learning_rate /= 10
+"""
+vgg19_cub_ft.npy
 
-fc8 init
-initial_value = tf.truncated_normal([in_size, out_size], 0.0, 0.0001)
-bias set to zero
+60: 0.7602306008338928 (224 input)
+
+60: 0.7762762308120728 (448 input)
 
 
+Same as above
+
+"""
 
 
 
@@ -40,10 +41,90 @@ st_vgg16
 st_vgg16_cub_ft_localization.npy
 st_vgg16_cub_ft_classification.npy
 
-130: 0.7524181008338928
-140: 0.75161212682724
-150: 0.7462797164916992
-160: 0.7507439851760864
-170: 0.7454737424850464
-180: 0.7468377351760864
-190: 0.7499380111694336
+90: 0.7923487424850464 * chosen
+99: 0.7895585298538208
+
+solver = Solver(
+	sess=sess,
+	dataset_type='cub',
+	dataset_dir=DEFAULT_DATASET_DIR,
+	resize=(256, 256),
+	crop_shape=(224, 224),
+	network_type='st_vgg',
+	log_dir=LOG_DIR,
+	weights_path=[os.path.join(WEIGHTS_DIR, 'st_vgg16_cub_ft_supervised_localization_epoch180.npy'),
+				  os.path.join(WEIGHTS_DIR, 'vgg16_cub_ft.npy')],
+	init_layers=[])
+
+lr_fast_vars=[
+	'localization/conv6/conv6_filters', 'localization/conv6/conv6_biases',
+	'localization/fc7/fc7_filters', 'localization/fc7/fc7_biases',
+	'localization/fc8/fc8_filters', 'localization/fc8/fc8_biases',
+	'classification/fc8/fc8_filters', 'classification/fc8/fc8_biases']
+
+solver.trainer(
+	learning_rate=0.0001,
+	epochs=100,
+	learning_rate_fast=0.001,
+	lr_fast_vars=lr_fast_vars,
+	l2_regularization_decay=5e-4,
+	save_path=os.path.join(WEIGHTS_DIR, 'st_vgg16_cub_ft_supervised.npy'),
+	save_scope=['localization', 'classification'],
+	save_epoch=[50, 60, 70, 80, 90, 99])
+
+if e is 60:
+ 	learning_rate_fast /= 2
+ 	learning_rate /= 2
+
+
+def build(self, rgb, train_mode=None, **kwargs):
+
+log.info('STN VGG model build started')
+
+# STN
+with tf.variable_scope('localization'):
+	loc_base = self.vgg_loc.build_partial(rgb, 'pool5', train_mode=train_mode)
+	loc_conv6 = self.nc_loc.conv_layer(loc_base, 1, 512, 128, 'conv6')
+
+	loc_fc7 = self.nc_loc.fc_layer(loc_conv6, 128, False, 'fc7')
+	loc_dropout7 = self.nc_loc.dropout_layer(loc_fc7, self.dropout_rate, train_mode, 'dropout7')
+
+	loc_fc8_bias_init = np.array([0.5, 0, 0.5, 0], dtype=np.float32)
+	loc_fc8 = self.nc_loc.fc_layer(loc_dropout7, 4, True, 'fc8',
+		init_bias=loc_fc8_bias_init)
+
+	loc_fc8 = self._clip_affine_ts(loc_fc8)
+
+	def batch_concat_scale_translate(x):
+		w, tx, h, ty = tf.split(x, 4)
+		return tf.concat([w, [0], tx, [0], h, ty], axis=0)
+
+	def batch_concat_translate(x):
+		tx, ty = tf.split(x, 2)
+		return tf.concat([[0.5], [0.], tx, [0.], [0.5], ty], axis=0)
+
+	self.affine = tf.map_fn(batch_concat_scale_translate, loc_fc8, dtype=tf.float32)
+
+	out_size = (224, 224)
+	stn_out = transformer(rgb, self.affine, out_size)
+
+# classification layer
+with tf.variable_scope('classification'):
+	logits, prob = self.vgg_cls.build(stn_out, train_mode=train_mode)
+
+# convert translation / scale info into bounding box format
+pred_bounding_box = self._affine_ts_2_bb(loc_fc8)
+
+# draw bounding boxes
+for key, value in kwargs.items():
+	if key is 'gt_bounding_box':
+		rgb_bb = draw_bounding_boxes(rgb, [value, pred_bounding_box])
+		tf.summary.image('input_with_gt_bb', rgb_bb, 3)
+	else:
+		raise RuntimeError('No matching argument')
+
+log.info('STN VGG model build finished')
+
+return logits, prob, pred_bounding_box
+
+"""

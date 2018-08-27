@@ -170,6 +170,7 @@ def transformer(U, theta, out_size, name='SpatialTransformer', **kwargs):
 
 			output = tf.reshape(
 				input_transformed, tf.stack([num_batch, out_height, out_width, num_channels]))
+
 			return output
 
 	with tf.variable_scope(name):
@@ -195,3 +196,187 @@ def batch_transformer(U, thetas, out_size, name='BatchSpatialTransformer'):
 		indices = [[i]*num_transforms for i in xrange(num_batch)]
 		input_repeated = tf.gather(U, tf.reshape(indices, [-1]))
 		return transformer(input_repeated, thetas, out_size)
+
+
+def transcale_2_bb(ts_matrix):
+	"""
+	Convert translation / scale information to bounding box format.
+	Opposite of bb_2_transcale().
+
+	Inputs:
+		- ts_matrix: tensorflow array of shape (batch, 4).
+			each row is composed of translation / scale info
+			(sx, tx, sy, ty) where s* denotes scale info between
+			0 and 1, and t* denotes translation info between -1 and 1
+
+	Returns:
+		- bounding_boxes: tensorflow placeholder for bounding boxes
+			information corresponding to the images
+			(ex. (x, y, w, h) relative to width and height of image)
+	"""
+	w, tx, h, ty = tf.split(ts_matrix, 4, axis=1)
+
+	x = (1 - w + tx) / 2
+	y = (1 - h + ty) / 2
+
+	bounding_boxes = tf.concat([x, y, w, h], axis=1)
+
+	return bounding_boxes
+
+def bb_2_transcale(bounding_boxes):
+	"""
+	Convert bounding box format to translation / scale information.
+	Opposite of transcale_2_bb().
+
+	Inputs:
+		- bounding_boxes: tensorflow placeholder for bounding boxes
+			information corresponding to the images
+			(ex. (x, y, w, h) relative to width and height of image)
+
+	Returns:
+		- ts_matrix: tensorflow array of shape (batch, 4).
+			each row is composed of translation / scale info
+			(sx, tx, sy, ty) where s* denotes scale info between
+			0 and 1, and t* denotes translation info between -1 and 1
+	"""
+	x, y, w, h = tf.split(bounding_boxes, 4, axis=1)
+
+	tx = 2*x + w - 1
+	ty = 2*y + h - 1
+
+	ts_matrix = tf.concat([w, tx, h, ty], axis=1)
+
+	return ts_matrix
+
+def clip_transcale(ts_matrix):
+	"""
+	If the translation / scale information is outside the range,
+	clip it so that we are not sampling from outside of the input
+	feature map.
+
+	Inputs:
+		- ts_matrix: tensorflow array of shape (batch, 4).
+			each row is composed of translation / scale info
+			(sx, tx, sy, ty) where s* denotes scale info between
+			0 and 1, and t* denotes translation info between -1 and 1
+
+	Returns:
+		- clipped_ts: same format as input but clipped
+	"""
+	bounding_boxes = transcale_2_bb(ts_matrix)
+
+	x, y, w, h = tf.split(bounding_boxes, 4, axis=1)
+
+	x_new = tf.where(x < 0, tf.zeros_like(x), x)
+	y_new = tf.where(y < 0, tf.zeros_like(y), y)
+
+	w_new = tf.where(x < 0, (w + x), w)
+	h_new = tf.where(y < 0, (h + y), h)
+
+	w_new = tf.where(x_new+w_new>1, (1 - x_new - 0.015), w_new)
+	h_new = tf.where(y_new+h_new>1, (1 - y_new - 0.015), h_new)
+
+	clipped_bb = tf.concat([x_new, y_new, w_new, h_new], axis=1)
+
+	clipped_ts = bb_2_transcale(clipped_bb)
+
+	return clipped_ts
+
+def transcale_2_affine(ts_matrix):
+	"""
+	Convert the translation / scale information to affine matrix format.
+
+	Inputs:
+		- ts_matrix: tensorflow array of shape (batch, 4).
+			each row is composed of translation / scale info
+			(sx, tx, sy, ty) where s* denotes scale info between
+			0 and 1, and t* denotes translation info between -1 and 1
+
+	Returns:
+		- affine matrix of shape (batch, 6) constructed using the input
+	"""
+	w, tx, h, ty = tf.split(ts_matrix, 4)
+
+	return tf.concat([w, [0], tx, [0], h, ty], axis=0)
+
+def trans_2_affine(elems):
+	"""
+	Convert the translation information to affine matrix format.
+	* For now, fix scale to 0.33.
+
+	Inputs:
+		- elems[0]: tensorflow array of shape (batch, 4).
+			each row is composed of translation / scale info
+			(sx, tx, sy, ty) where s* denotes scale info between
+			0 and 1, and t* denotes translation info between -1 and 1
+		- elems[1]: tensorflow array of shape (batch, 2).
+			each row is composed of translation info
+			(tx, ty) which denotes translation info between -1 and 1
+
+	Returns:
+		- affine matrix of shape (batch, 6) constructed using the input
+	"""
+	w_bb, _, h_bb, _ = tf.split(elems[0], 4)
+	tx, ty = tf.split(elems[1], 2)
+
+	scalar = 0.33 * tf.maximum(w_bb, h_bb)
+
+	tmp_ts_matrix = tf.concat([scalar, tx, scalar, ty], axis=0)
+	tmp_ts_matrix = clip_transcale(tf.expand_dims(tmp_ts_matrix, 0))
+
+	w, tx, h, ty = tf.split(tf.squeeze(tmp_ts_matrix, 0), 4)
+
+	return tf.concat([w, [0], tx, [0], h, ty], axis=0)
+
+def rel_trans_2_abs_pl(bounding_boxes, t_matrix):
+	"""
+	Convert translation info relative to the bounding box
+	to an absolute part location which is relative to
+	the original image.
+
+	Inputs:
+		- bounding_boxes: tensorflow placeholder for bounding boxes
+			information corresponding to the images
+			(ex. (x, y, w, h) relative to width and height of image)
+		- t_matrix: tensorflow array of shape (batch, 2).
+			each row is composed of translation info
+			(tx, ty) which denotes translation info between -1 and 1
+
+	Returns:
+		- tf array of size (batch, 2) containing absolute part location
+	"""
+	x, y, w, h = tf.split(bounding_boxes, 4, axis=1)
+	tx, ty = tf.split(t_matrix, 2, axis=1)
+
+	x_center = x + (tx+1)*w/2
+	y_center = y + (ty+1)*h/2
+
+	return tf.concat([x_center, y_center], axis=1)
+
+def abs_pl_2_bb(bounding_boxes, abs_pl):
+	"""
+	Convert absolute part location to bounding box format using
+	pre-defined width and height.
+
+	Inputs:
+		- bounding_boxes: tensorflow placeholder for bounding boxes
+			information corresponding to the images
+			(ex. (x, y, w, h) relative to width and height of image)
+		- abs_pl: tf array of size (batch, 2) containing
+			absolute part location
+
+	Returns:
+		- bounding box locations converted from absolute part location
+	"""
+	x, y, w, h = tf.split(bounding_boxes, 4, axis=1)
+	x_center, y_center = tf.split(abs_pl, 2, axis=1)
+
+	# abs_w = w * 0.33
+	# abs_h = h * 0.33
+	abs_w = tf.ones_like(w) * 0.33 * tf.maximum(w, h)
+	abs_h = tf.ones_like(h) * 0.33 * tf.maximum(w, h)
+
+	x_ul = x_center - (abs_w / 2)
+	y_ul = y_center - (abs_h / 2)
+
+	return tf.concat([x_ul, y_ul, abs_w, abs_h], axis=1)

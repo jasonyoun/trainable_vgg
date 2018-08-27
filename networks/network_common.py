@@ -8,7 +8,7 @@ class NetworkCommon:
 	Common functions for the convolutional network.
 	"""
 
-	def __init__(self, init_layers, npy_path, trainable):
+	def __init__(self, init_layers, npy_path, trainable, initializer=None, stddev=0.01):
 		"""
 		Constructor for the NetworkCommon class.
 
@@ -25,6 +25,8 @@ class NetworkCommon:
 
 		self.init_layers = init_layers
 		self.trainable = trainable
+		self.initializer = initializer
+		self.stddev = stddev
 		self.var_dict = {}
 
 	def avg_pool(self, inputs, name):
@@ -91,13 +93,14 @@ class NetworkCommon:
 
 			return relu
 
-	def fc_layer(self, inputs, out_size, is_last, name, do_batch_norm=False, activation_fn=None, **kwargs):
+	def fc_layer(self, inputs, in_size, out_size, is_last, name, do_batch_norm=False, activation_fn=None, **kwargs):
 		"""
 		Generate a FC layer.
 		ReLu is performed depending if the layer is last or not.
 
 		Inputs:
 			- inputs: input tensor
+			- in_size: input tensor size
 			- out_size: number of output size
 			- is_last: boolean. True if this is the last layer
 			- name: name of the layer
@@ -120,7 +123,6 @@ class NetworkCommon:
 				raise RuntimeError('No matching argument')
 
 		with tf.variable_scope(name):
-			in_size = np.prod(inputs.get_shape().as_list()[1:])
 			weights, biases = self._get_fc_var(in_size, out_size, init_weight, init_bias, name)
 			x = tf.reshape(inputs, [-1, in_size])
 			pre_activation = tf.nn.bias_add(tf.matmul(x, weights), biases)
@@ -176,9 +178,17 @@ class NetworkCommon:
 			- filters: filters of the convolutional filter
 			- biases: biases of the convolutional filter
 		"""
-		initial_value = tf.truncated_normal([filter_size, filter_size, in_channels, out_channels], 0.0, 0.0001)
+		if self.initializer is 'xavier':
+			log.debug('Initializing weight of layer {} to xavier'.format(name))
+			initializer = tf.contrib.layers.xavier_initializer()
+			initial_value = initializer([filter_size, filter_size, in_channels, out_channels])
+		else:
+			log.debug('Initializing weight of layer {} to truncated_normal'.format(name))
+			initial_value = tf.truncated_normal([filter_size, filter_size, in_channels, out_channels], 0.0, self.stddev)
+
 		filters = self._get_var(initial_value, name, 0, name + "_filters")
 
+		log.debug('Initializing bias of layer {} to zeros'.format(name))
 		initial_value = tf.zeros([out_channels])
 		biases = self._get_var(initial_value, name, 1, name + "_biases")
 
@@ -202,8 +212,13 @@ class NetworkCommon:
 			- biases: biases of the FC layer
 		"""
 		if init_weight is None:
-			log.debug('Initializing weight of layer {} to truncated_normal'.format(name))
-			initial_value = tf.truncated_normal([in_size, out_size], 0.0, 0.0001)
+			if self.initializer is 'xavier':
+				log.debug('Initializing weight of layer {} to xavier'.format(name))
+				initializer = tf.contrib.layers.xavier_initializer()
+				initial_value = initializer([in_size, out_size])
+			else:
+				log.debug('Initializing weight of layer {} to truncated_normal'.format(name))
+				initial_value = tf.truncated_normal([in_size, out_size], 0.0, self.stddev)
 		else:
 			log.debug('Initializing weight of layer {} to user defined value'.format(name))
 			initial_value = init_weight
